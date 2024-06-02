@@ -40,19 +40,19 @@ cursor.execute("""CREATE TABLE attractions(
     name VARCHAR(255),
     category VARCHAR(255),
     description TEXT,
-    image TEXT,
-    MRT VARCHAR(255),
     address VARCHAR(255),
-    transportation TEXT,
-    longitude DOUBLE,
-    latitude DOUBLE,
+    transport TEXT,
+    MRT VARCHAR(255),
+    lat DOUBLE,
+    lng DOUBLE,
+    images TEXT,
     open_time TEXT,
     rate DOUBLE,
     SERIAL_NO VARCHAR(255))
 """)
 
 
-sql = """INSERT INTO attractions (name, category, description, image, MRT, address, transportation, longitude, latitude, open_time, rate, SERIAL_NO)
+sql = """INSERT INTO attractions (name, category, description, address, transport, mrt, lat, lng, images, open_time, rate, SERIAL_NO)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
 for attraction in results:
@@ -64,9 +64,9 @@ for attraction in results:
     image_string = ', '.join(valid_urls) 
 
     values = (
-        attraction["name"], attraction["CAT"], attraction["description"], image_string, 
-        attraction["MRT"], attraction["address"], attraction["direction"], attraction["longitude"], 
-        attraction["latitude"], attraction["MEMO_TIME"], attraction["rate"], attraction["SERIAL_NO"]
+        attraction["name"], attraction["CAT"], attraction["description"], attraction["address"], 
+        attraction["direction"], attraction["MRT"], attraction["latitude"], attraction["longitude"],
+        image_string, attraction["MEMO_TIME"], attraction["rate"], attraction["SERIAL_NO"]
     )
     cursor.execute(sql, values)
 

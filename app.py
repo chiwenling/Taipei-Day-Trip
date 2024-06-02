@@ -31,23 +31,24 @@ async def searchAttraction(request: Request,page:int = Query(0), keyword: str = 
 		page_size=12
 		offset = page * page_size
 		if 	keyword:
-			cursor.execute("SELECT COUNT(*) AS total FROM attractions WHERE MRT LIKE %s OR name LIKE %s",(f"%{keyword}",f"%{keyword}"))
-			total= cursor.fetchone() 
+			cursor.execute("SELECT COUNT(*) AS total FROM attractions WHERE mrt=%s OR name LIKE %s",(keyword,f"%{keyword}%"))
+			total_num= cursor.fetchone() 
+			print(total_num)
 			
 			#因為回傳值是{'total': x}
-			total= total["total"]
+			total= total_num["total"]
 			print(total)
 			offset = total//12 * page_size
 			
-			cursor.execute("SELECT id, name, category, description, image, MRT, address, transportation, longitude, latitude, open_time, rate, SERIAL_NO\
+			cursor.execute("SELECT id, name, category, description, address, transport, mrt, lat, lng, images\
 							FROM attractions\
-							WHERE MRT LIKE %s OR name LIKE %s\
-							LIMIT %s OFFSET %s",(f"%{keyword}",f"%{keyword}",page_size,offset))
+							WHERE MRT = %s OR name LIKE %s\
+							LIMIT %s OFFSET %s",(keyword,f"%{keyword}%",page_size,offset))
 			attractions=cursor.fetchall()
 			
 	
 		else:
-			cursor.execute("SELECT id, name, category, description, image, MRT, address, transportation, longitude, latitude, open_time, rate, SERIAL_NO\
+			cursor.execute("SELECT id, name, category, description, address, transport, mrt, lat, lng, images\
 							FROM attractions\
 				  			LIMIT %s OFFSET %s",(page_size,offset))
 			attractions=cursor.fetchall()
@@ -57,9 +58,9 @@ async def searchAttraction(request: Request,page:int = Query(0), keyword: str = 
 			total= total["total"]
 
 		for attraction in attractions:
-			if 'image' in attraction and attraction['image']:
-					images_str = attraction['image']
-					attraction['image'] = [img.strip() for img in images_str.split(',')]
+			if 'images' in attraction and attraction['images']:
+					images_str = attraction['images']
+					attraction['images'] = [img.strip() for img in images_str.split(',')]
 
 		if 	attractions ==  None:
 			return {"data": None}
@@ -82,9 +83,9 @@ async def searchId(request: Request, attractionId:int):
 		cursor.execute("SELECT * FROM attractions WHERE id=%s",(attractionId,))
 		attraction=cursor.fetchone()
 		
-		if 'image' in attraction and attraction['image']:
-				images_str = attraction['image']
-				attraction['image'] = [img.strip() for img in images_str.split(',')]
+		if 'images' in attraction and attraction['images']:
+				images_str = attraction['images']
+				attraction['images'] = [img.strip() for img in images_str.split(',')]
 		if attraction:
 			return{
 				"data": attraction
