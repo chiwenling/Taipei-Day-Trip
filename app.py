@@ -13,7 +13,7 @@ travel_db = mysql.connector.connect(
 )
 print(travel_db)
 cursor=travel_db.cursor()
-
+print("this version")
 
 # Static Pages (Never Modify Code in this Block)
 @app.get("/", include_in_schema=False)
@@ -30,16 +30,14 @@ async def searchAttraction(request: Request,page:int = Query(0), keyword: str = 
 		cursor = travel_db.cursor(dictionary=True)
 		page_size=12
 		offset = page * page_size
-		if 	keyword:
+		print(keyword)
+
+		if 	keyword or page:
 			cursor.execute("SELECT COUNT(*) AS total FROM attractions WHERE mrt=%s OR name LIKE %s",(keyword,f"%{keyword}%"))
 			total_num= cursor.fetchone() 
 			print(total_num)
-			
 			#因為回傳值是{'total': x}
-			total= total_num["total"]
-			print(total)
-			offset = total//12 * page_size
-			
+			total= total_num["total"]		
 			cursor.execute("SELECT id, name, category, description, address, transport, mrt, lat, lng, images\
 							FROM attractions\
 							WHERE MRT = %s OR name LIKE %s\
@@ -62,16 +60,15 @@ async def searchAttraction(request: Request,page:int = Query(0), keyword: str = 
 					images_str = attraction['images']
 					attraction['images'] = [img.strip() for img in images_str.split(',')]
 
-		if 	attractions ==  None:
+		next_page = page + 1 if (page + 1) * page_size < total else None
+		if  page > total//12: 
 			return {"data": None}
-		
 		else:
-			next_page = page + 1 if (page + 1) * page_size < total else None
 			return {
 				"nextPage": next_page,
 				"data": attractions
-			}	
-
+		}	
+	    
 	except:
 		   raise HTTPException(status_code=500, detail={"error": True, "message": "請按照情境提供對應的錯誤訊息"})
 
