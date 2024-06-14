@@ -3,6 +3,7 @@ from fastapi.responses import FileResponse
 import mysql.connector
 from fastapi import FastAPI, Request, Form, Query, HTTPException
 import json
+from fastapi.staticfiles import StaticFiles
 
 app=FastAPI()
 travel_db = mysql.connector.connect(
@@ -14,6 +15,10 @@ travel_db = mysql.connector.connect(
 print(travel_db)
 cursor=travel_db.cursor()
 print("this version")
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/pics", StaticFiles(directory="pics"), name="pics")
+
 
 # Static Pages (Never Modify Code in this Block)
 @app.get("/", include_in_schema=False)
