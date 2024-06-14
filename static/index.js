@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 document.addEventListener("DOMContentLoaded", function(){
-    let apiURL = "http://127.0.0.1:8000/api/attractions";
+    let apiURL = "http://52.37.77.90:8000/api/attractions";
     let container = document.getElementById("attractionAll");
     let loading = document.getElementById("getMore");
     let nextPage = 0;
