@@ -196,10 +196,10 @@
 }
 
 .footer{
-    margin: 50px;
+    margin-top: 50px;
     height:104px;
     background-color:#757575;  
-    width: 1920px;
+    width: 100%;
     padding: 40px 84px 40px 84px;
 }
 
