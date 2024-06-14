@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function(){
     };
 
     function fetchMRT() {
-        fetch("http://127.0.0.1:8000/api/mrts")
+        fetch("http://52.37.77.90:8000/api/mrts")
             .then(function(response) {
                 if (!response.ok) {
                     console.log("Error");
