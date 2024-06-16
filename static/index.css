@@ -4,23 +4,26 @@
 
 .header{
     background-color:white;
-    width: 100%;
-    top: 0;
+    width: 100vw;
     z-index: 100;
     position: fixed;
     height: 54px;
+    top: 0;
+    left: 0;   
 }
+
 .headerTitle{
-    margin:auto;
     display: grid;
-    grid-auto-columns:1000px 100px 100px;
+    grid-auto-columns:80% 10% 10%;
     grid-auto-flow:column; 
 }
+
 .logo{
     font-size: 30px;
     color: #448899;
     font-weight: bold;
     padding-top: 5px;
+    padding-left: 12px;
     cursor: pointer;
 }
 .book{
@@ -35,21 +38,26 @@
     cursor: pointer;
 }
 
-.welcome_pic{
-    position: relative;
-    height: 320px;
+.welcome {
+    height: 374px;
     width: 100%;
 }
 
-.slogan{
-    position: absolute;
-    top: 15%;
-    color: white;
+.sloganpic{
+    background: url('/pics/welcome_pic.png');
+    z-index: -1;
+    /* display: flex;
+    justify-content: center;
+    align-items: center;    */
+   
+    height: 500px;
+    width: 100vw;
+    object-fit: cover;
+}
+
+.slogan {
     width: 1200px;
-    margin: auto;
-    left: 0;
-    right: 0;
-    text-align:start;
+    top: 150px;  
 }
 
 .maintitle{
@@ -57,6 +65,7 @@
     font-weight: bold;
     color: white;
     margin-top:10px;
+    text-align:start;
 }
 
 .subtitle{
@@ -64,7 +73,8 @@
     font-weight: bold;
     color: white;
     margin-top:10px;
-}
+    text-align: start;
+} 
 
 .search_container {
     display: flex;
@@ -96,25 +106,52 @@
 .mrt{
     display: flex;
     align-items: center;
-    overflow: hidden;
-    margin: 20px auto;
-    width: 80%;
+    height: 70px;
+    padding: 20px 0px 20px 0px;
+    gap: 0px;
+    opacity: 0px;
 }
 
-.scroll_button {
+.scroll_button_left {  
+    width: 47px;
+    height: 50px;
+    padding: 9px 0px 9px 0px;
+    gap: 0px;
+    opacity: 0px;   
+}
+
+.scroll_button_right {  
+    width: 47px;
+    height: 50px;
+    padding: 9px 0px 9px 15px;
+    gap: 0px;
+    opacity: 0px; 
+}
+
+.scroll_left{
     cursor: pointer;
-    background-color: transparent;
-    color: #666666;
-    border: 2px solid #ccc;
-    border-radius: 50%;
-    width: 3%;
-    font-size: 20px;
+    width: 32px;
+    height: 32px;
+    padding: 9px 0px 9px 15px;   
+}
+.scroll_right{
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    padding: 9px;
 }
 
+.new{
+    width: 100%;
+    padding: 10px;
+    /* box-sizing: border-box; */
+}
 .mrt_name{  
+    height: 50px;
     display: flex;
     overflow-x: auto;
-    white-space: nowrap;
+    width: calc(100% - 64px); 
+    overflow: hidden;  
 }
 
 .station_button {
@@ -123,94 +160,119 @@
     color: #666666;
     font-size: 16px;
     border: none;
-    padding-left: 15px;
+    padding: 5px 18px 5px 15px;
     white-space: nowrap;
     font-size: 16px;
 } 
 
+.attraction_section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    /* padding-left: 7.5vw;
+    padding-right: 7.5vw; */
+}
+
 .attraction{
+    width: 100%;
     display: grid;
     margin: auto;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 30px;
-    width: 100%;
+    width: 100vw;
+    /* width: 1170px; */
+    height: 786px;
+    top: 15px;
+    left: 15px;
+    gap: 10px;
+
 }
 
-.attraction_item {
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px 5px 0 0;
-    width: 100%;
-    height: 242px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.attraction_item {   
+    border: 1px solid #E8E8E8;
     display: flex;
     flex-direction: column;
-    position: relative;
+    position: relative; 
+    width: 270px;
+    height: 242px;
+    border-radius: 5px;
 }
 
 .image-container {
     position: relative;
     width: 100%;
+    width: 270px;
     height: 197px;
 }
 
 .attraction_item img {
     width: 100%;
     height: 197px;
+    overflow: hidden;
+    border-top-left-radius: 5px; 
+    border-top-right-radius: 5px;
     object-fit: cover;
 }
+
 .attraction_title {
     position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: start;
     width: 270px;
     height: 40px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color:rgba(0, 0, 0, 0.6); 
+    bottom: 0;
+}
+
+.attraction_title_font{
+    padding: 8px 0px 5px 10px;
     color: white;
-    padding: 0 0 0 10px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
-    top: 157px;
-    opacity: 1; 
+    top: 163px;
     white-space: nowrap;
     overflow: hidden; 
     text-overflow: ellipsis;
 }
 
-.info {
+.info{
     width: 270px;
     height: 45px;
     gap: 4px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    background-color: #f9f9f9;
     opacity: 1;
 }
 .info span {
-    font-size: 15px;
+    font-size: 16px;
     text-align: center;
-    color: #555;
-    padding: 15px 10px 5px 10px; /* Ensure padding for better alignment */
+    color: #757575;
+    padding: 15px 10px 20px 10px; 
 }
 
-.footer{
-    margin-top: 50px;
-    height:104px;
-    background-color:#757575;  
-    width: 100%;
-    padding: 40px 84px 40px 84px;
+.getMore{
+    padding-bottom: 100px;
+}
+
+.footer {
+    background-color: #757575;
+    margin:auto;
+    text-align: center;
+    display: none; 
+    width: 100vw;
+    height: 104px;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .footer_content{
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font-size: 16px;
     font-weight: bold;
     color: white;
-}
+    text-align: center;
+    padding-top: 100px;
+}  
 
 .signin{
     display: none; 
@@ -298,7 +360,8 @@
 }
 
 .page{
-    width: 1200px;
+    max-width:1200px;
+    margin: 0 auto;
 }
 
 @media screen and (max-width: 360px){

@@ -29,7 +29,9 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 document.addEventListener("DOMContentLoaded", function(){
-    let apiURL = "http://52.37.77.90:8000/api/attractions";
+    // let apiURL = "http://52.37.77.90:8000/api/attractions";
+    
+    let apiURL = "http://127.0.0.1:8000/api/attractions";
     let container = document.getElementById("attractionAll");
     let loading = document.getElementById("getMore");
     let nextPage = 0;
@@ -37,8 +39,8 @@ document.addEventListener("DOMContentLoaded", function(){
     let searchInput = document.querySelector(".search_input");
     let searchButton = document.querySelector(".search_button");
     let mrtName = document.querySelector(".mrt_name");
-    let scrollLeft = document.getElementById("scroll_left");
-    let scrollRight = document.getElementById("scroll_right");
+    let scrollLeft = document.querySelector(".scroll_left");
+    let scrollRight = document.querySelector(".scroll_right");
 
     loadAttractions(nextPage);
 
@@ -72,7 +74,9 @@ document.addEventListener("DOMContentLoaded", function(){
                     attractionItem.innerHTML = `
                         <div class="image-container">
                             <img src="${attraction.images.length > 0 ? attraction.images[0] : "default.jpg"}" alt="${attraction.name}">
-                            <div class="attraction_title">${attraction.name}</div>
+                            <div class="attraction_title">
+                                <div class="attraction_title_font">${attraction.name}</div>   
+                            </div>
                         </div>
                         <div class="info">
                             <span>${attraction.mrt}</span>
@@ -106,7 +110,8 @@ document.addEventListener("DOMContentLoaded", function(){
     };
 
     function fetchMRT() {
-        fetch("http://52.37.77.90:8000/api/mrts")
+        // fetch("http://52.37.77.90:8000/api/mrts")
+        fetch("http://127.0.0.1:8000/api/mrts")
             .then(function(response) {
                 if (!response.ok) {
                     console.log("Error");
@@ -156,3 +161,4 @@ document.addEventListener("DOMContentLoaded", function(){
         }
     });
 });
+

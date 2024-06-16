@@ -1,0 +1,41 @@
+.body{
+    font-family:"Noto Sans TC";
+} 
+
+.header{
+    background-color:white;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+    position: fixed;
+    height: 54px;
+}
+.headerTitle{
+    margin:auto;
+    display: grid;
+    grid-auto-columns:1000px 100px 100px;
+    grid-auto-flow:column; 
+}
+.logo{
+    font-size: 30px;
+    color: #448899;
+    font-weight: bold;
+    padding-top: 5px;
+    cursor: pointer;
+}
+.book{
+    font-size: 16px;
+    padding-top: 15px;
+    cursor: pointer;
+}
+.sign{
+    font-size: 16px; 
+    text-align: center;
+    padding-top: 15px; 
+    cursor: pointer;
+}
+
+.page{
+    width: 1200px;
+    margin:auto
+}
