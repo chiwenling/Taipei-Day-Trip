@@ -1,0 +1,75 @@
+<div id="header" class="header">
+    <div class="headerTitle page">
+        <div class="logo">台北一日遊</div>
+        <div class="book">預定行程</div>
+        <div class="sign">登入/註冊</div>
+    </div>
+</div>
+
+<div class="welcome"> 
+    <div class="sloganpic">
+        <div class="slogan">
+            <div class="maintitle">輕鬆享受台北一日悠閒</div>
+            <div class="subtitle">探索每個角落，體驗城市的深度旅遊行程</div>
+            <div class="search_container">
+                <input type="text" class="search_input" placeholder="輸入景點名稱與查詢">
+                <button class="search_button">
+                    <img src="/pics/searchicon.png" alt="Search Icon">
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="new"> 
+    <!-- 捷運站點 -->
+    <div class="mrt page"> 
+            <div class="scroll_button_left">
+                <img class="scroll_left" src="/pics/scroll_left icon.png"></img>
+            </div> 
+            <div class="mrt_name"></div> 
+            <div class="scroll_button_right">
+                <img class="scroll_right" src="/pics/scroll_right icon.png"></img>
+            </div>    
+    </div>
+
+    <!-- 景點 -->
+    <div class="attraction_section">
+        <div class="attraction" id="attractionAll"></div>    
+    </div>
+
+    <div id="getMore" class="getMore"></div> 
+</div>
+
+<!-- 登入框 -->
+<div id="signin" class="signin">
+    <div class="top_bar"></div>
+    <div class="popup_title">
+        <div class="bluebg"></div>
+        <span class="title">登入會員帳號</span>
+        <span class="close">X</span>
+    </div>      
+    <form class="signin_form">
+        <input type="email" class="email" name="email" placeholder="輸入電子信箱" required>
+        <input type="password" class="password" name="password" placeholder="輸入密碼" required>
+        <button type="submit" class="submit">登入帳戶</button>
+    </form>
+    <div class="alertword">還沒有帳戶？<a href="#" id="signupLink">點此註冊</a></div>
+</div>
+
+<!-- 註冊框 -->
+<div id="signup" class="signup">
+    <div class="top_bar"></div>
+    <div class="popup_title">
+        <div class="bluebg"></div>
+        <span class="title">註冊會員帳號</span>
+        <span class="close">X</span>
+    </div>      
+    <form class="signup_form">
+        <input type="name" class="name" name="name" placeholder="輸入姓名" required>
+        <input type="email" class="email" name="email" placeholder="輸入電子信箱" required>
+        <input type="password" class="password" name="password" placeholder="輸入密碼" required>
+        <button type="submit" class="submit">註冊新帳戶</button>
+    </form>
+    <div class="alertword">已經有帳戶了？<a href="#" id="signinLink">點此登入</a></div>
+</div>
