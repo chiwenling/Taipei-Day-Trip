@@ -29,11 +29,10 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 document.addEventListener("DOMContentLoaded", function(){
-    // let apiURL = "http://52.37.77.90:8000/api/attractions";
+    let apiURL = "http://52.37.77.90:8000/api/attractions";
     
-    let apiURL = "http://127.0.0.1:8000/api/attractions";
-    let container = document.getElementById("attractionAll");
-    let loading = document.getElementById("getMore");
+    // let apiURL = "http://127.0.0.1:8000/api/attractions";
+    let container = document.querySelector(".attractionAll");
     let nextPage = 0;
     let loadingData = false;
     let searchInput = document.querySelector(".search_input");
@@ -41,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function(){
     let mrtName = document.querySelector(".mrt_name");
     let scrollLeft = document.querySelector(".scroll_left");
     let scrollRight = document.querySelector(".scroll_right");
+    let loading = document.querySelector(".getMore");
 
     loadAttractions(nextPage);
 
@@ -102,16 +102,20 @@ document.addEventListener("DOMContentLoaded", function(){
 
     function scroll(){
         let rect = loading.getBoundingClientRect();
-        let isAtBottom = rect.top <= window.innerHeight && rect.bottom >= 0;
+        let isTop = rect.top <= window.innerHeight;
+        let isBottom = rect.bottom >= 0;
+        let end = isTop && isBottom;
 
-        if (isAtBottom && nextPage !== null) {
+        if (end && nextPage !== null) {
             loadAttractions(nextPage, searchInput.value);
         }
     };
 
+    window.addEventListener("scroll", scroll);
+
     function fetchMRT() {
-        // fetch("http://52.37.77.90:8000/api/mrts")
-        fetch("http://127.0.0.1:8000/api/mrts")
+        fetch("http://52.37.77.90:8000/api/mrts")
+        // fetch("http://127.0.0.1:8000/api/mrts")
             .then(function(response) {
                 if (!response.ok) {
                     console.log("Error");
@@ -122,21 +126,25 @@ document.addEventListener("DOMContentLoaded", function(){
                 let stations = data.data; 
                 mrtName.innerHTML = "";
                 stations.forEach(function(station) {
-                    let button = document.createElement("button");
+                    let button = document.createElement("div");
                     button.className = "station_button";
                     button.textContent = station; 
                     button.addEventListener("click", function() {
                         nextPage = 0;
-                        loadAttractions(nextPage, station);
+                        searchInput.value = station; 
+                        loadAttractions(nextPage, searchInput.value);
                     });
                     mrtName.appendChild(button);
                 });
+                mrtName.scrollLeft = 0;
                 console.log("finished"); 
             })
             .catch(function(error) {
                 console.error("Error fetch", error);
             });
-    }fetchMRT();
+    }
+    
+    fetchMRT();
    
 
     scrollLeft.addEventListener("click", function() {
@@ -147,18 +155,9 @@ document.addEventListener("DOMContentLoaded", function(){
         mrtName.scrollBy({ left: 100});
     });
 
-    window.addEventListener("scroll", scroll);
-
     searchButton.addEventListener("click", function() {
         nextPage = 0; 
         loadAttractions(nextPage, searchInput.value);
-    });
-
-    searchInput.addEventListener("keypress", function(event) {
-        if (event.key === "Enter") {
-            nextPage = 0; 
-            loadAttractions(nextPage, searchInput.value);
-        }
     });
 });
 

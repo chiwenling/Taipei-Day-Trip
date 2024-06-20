@@ -10,50 +10,198 @@
 
 <body>
 <!-- 頂部 -->
-
-    <div id="header" class="header">
-        <div class="headerTitle page">
+    <div class="header">
+        <div class="headerTitle">
             <div class="logo">台北一日遊</div>
-            <div class="book">預定行程</div>
-            <div class="sign">登入/註冊</div>
-        </div>
+            <div class="nav">
+                <div class="book">預定行程</div>
+                <div class="sign">登入/註冊</div>
+            </div>
+        </div> 
     </div>
 
-    <div class="welcome"> 
-        <div class="sloganpic">
-            <div class="slogan">
-                <div class="maintitle">輕鬆享受台北一日悠閒</div>
-                <div class="subtitle">探索每個角落，體驗城市的深度旅遊行程</div>
-                <div class="search_container">
-                    <input type="text" class="search_input" placeholder="輸入景點名稱與查詢">
-                    <button class="search_button">
-                        <img src="/pics/searchicon.png" alt="Search Icon">
-                    </button>
-                </div>
+<!-- banner -->
+    <div class="welcomepic">
+        <div class="slogan">
+            <div class="maintitle">輕鬆享受台北一日悠閒</div>
+            <div class="subtitle">探索每個角落，體驗城市的深度旅遊行程</div>
+            <div class="search">
+                <input type="text" class="search_input" placeholder="輸入景點名稱與查詢">
+                <button class="search_button">
+                    <img src="/pics/searchicon.png" alt="Search Icon">
+                </button>
             </div>
         </div>
     </div>
 
-    <div class="new"> 
-        <!-- 捷運站點 -->
-        <div class="mrt page"> 
-                <div class="scroll_button_left">
-                    <img class="scroll_left" src="/pics/scroll_left icon.png"></img>
-                </div> 
-                <div class="mrt_name"></div> 
-                <div class="scroll_button_right">
-                    <img class="scroll_right" src="/pics/scroll_right icon.png"></img>
-                </div>    
-        </div>
+ <!-- 捷運站點 -->
+    <div class="mrt"> 
+        <div class="scroll_button_left">
+            <img class="scroll_left" src="/pics/scroll_left icon.png"></img>
+        </div> 
+        <div class="mrt_name"></div> 
+        <div class="scroll_button_right">
+            <img class="scroll_right" src="/pics/scroll_right icon.png"></img>
+        </div>    
+    </div> 
 
-        <!-- 景點 -->
-        <div class="attraction_section">
-            <div class="attraction" id="attractionAll"></div>    
-        </div>
-
-        <div id="getMore" class="getMore"></div> 
+    <!-- 景點 -->
+    <div class="attraction_section">
+        <div class="attractionAll">
+            <div class="attraction_item">
+                <div class="image-container">
+                    <img src="../pics/welcome_pic.png" alt="景點1">
+                    <div class="attraction_title">
+                        <div class="attraction_title_font">景點1</div>
+                    </div>
+                </div>
+                <div class="info">
+                    <span>位置1</span>
+                    <span>描述1</span>
+                </div>
+            </div>
+            <!-- 只是排版用 -->
+            <!-- <div class="attraction_item">
+                <div class="image-container">
+                    <img src="../pics/welcome_pic.png" alt="景點2">
+                    <div class="attraction_title">
+                        <div class="attraction_title_font">景點2</div>
+                    </div>
+                </div>
+                <div class="info">
+                    <span>位置2</span>
+                    <span>描述2</span>
+                </div>
+            </div>
+            <div class="attraction_item">
+                <div class="image-container">
+                    <img src="../pics/welcome_pic.png" alt="景點3">
+                    <div class="attraction_title">
+                        <div class="attraction_title_font">景點3</div>
+                    </div>
+                </div>
+                <div class="info">
+                    <span>位置3</span>
+                    <span>描述3</span>
+                </div>
+            </div>
+            <div class="attraction_item">
+                <div class="image-container">
+                    <img src="../pics/welcome_pic.png" alt="景點4">
+                    <div class="attraction_title">
+                        <div class="attraction_title_font">景點4</div>
+                    </div>
+                </div>
+                <div class="info">
+                    <span>位置4</span>
+                    <span>描述4</span>
+                </div>
+            </div>
+            <div class="attraction_item">
+                <div class="image-container">
+                    <img src="../pics/welcome_pic.png" alt="景點5">
+                    <div class="attraction_title">
+                        <div class="attraction_title_font">景點5</div>
+                    </div>
+                </div>
+                <div class="info">
+                    <span>位置5</span>
+                    <span>描述5</span>
+                </div>
+            </div>
+            <div class="attraction_item">
+                <div class="image-container">
+                    <img src="../pics/welcome_pic.png" alt="景點6">
+                    <div class="attraction_title">
+                        <div class="attraction_title_font">景點6</div>
+                    </div>
+                </div>
+                <div class="info">
+                    <span>位置6</span>
+                    <span>描述6</span>
+                </div>
+            </div>
+            <div class="attraction_item">
+                <div class="image-container">
+                    <img src="../pics/welcome_pic.png" alt="景點7">
+                    <div class="attraction_title">
+                        <div class="attraction_title_font">景點7</div>
+                    </div>
+                </div>
+                <div class="info">
+                    <span>位置7</span>
+                    <span>描述7</span>
+                </div>
+            </div>
+            <div class="attraction_item">
+                <div class="image-container">
+                    <img src="../pics/welcome_pic.png" alt="景點8">
+                    <div class="attraction_title">
+                        <div class="attraction_title_font">景點8</div>
+                    </div>
+                </div>
+                <div class="info">
+                    <span>位置8</span>
+                    <span>描述8</span>
+                </div>
+            </div>
+            <div class="attraction_item">
+                <div class="image-container">
+                    <img src="../pics/welcome_pic.png" alt="景點9">
+                    <div class="attraction_title">
+                        <div class="attraction_title_font">景點9</div>
+                    </div>
+                </div>
+                <div class="info">
+                    <span>位置9</span>
+                    <span>描述9</span>
+                </div>
+            </div>
+            <div class="attraction_item">
+                <div class="image-container">
+                    <img src="../pics/welcome_pic.png" alt="景點10">
+                    <div class="attraction_title">
+                        <div class="attraction_title_font">景點10</div>
+                    </div>
+                </div>
+                <div class="info">
+                    <span>位置10</span>
+                    <span>描述10</span>
+                </div>
+            </div>
+            <div class="attraction_item">
+                <div class="image-container">
+                    <img src="../pics/welcome_pic.png" alt="景點11">
+                    <div class="attraction_title">
+                        <div class="attraction_title_font">景點11</div>
+                    </div>
+                </div>
+                <div class="info">
+                    <span>位置11</span>
+                    <span>描述11</span>
+                </div>
+            </div>
+            <div class="attraction_item">
+                <div class="image-container">
+                    <img src="../pics/welcome_pic.png" alt="景點12">
+                    <div class="attraction_title">
+                        <div class="attraction_title_font">景點12</div>
+                    </div>
+                </div>
+                <div class="info">
+                    <span>位置12</span>
+                    <span>描述12</span>
+                </div>
+            </div> -->
+        </div>  
     </div>
+
+    <div class="getMore"></div> 
     
+    <footer>
+        COPYRIGHT © 2021 台北一日遊
+    </footer>
+
     <!-- 登入框 -->
     <div id="signin" class="signin">
         <div class="top_bar"></div>
@@ -85,11 +233,7 @@
             <button type="submit" class="submit">註冊新帳戶</button>
         </form>
         <div class="alertword">已經有帳戶了？<a href="#" id="signinLink">點此登入</a></div>
-    </div>
 
-    <!-- <footer class="footer">
-        <span class="footer_content">COPYRIGHT © 2021 台北一日遊</span>
-    </footer> -->
 
 </body>
 
