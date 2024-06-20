@@ -434,6 +434,10 @@ footer {
         height: 46px;
     }
 
+    .welcomepic{
+        min-width: 360px;
+    }
+
     .mrt{
         width: 100%;
         min-width: 360px;
@@ -458,7 +462,7 @@ footer {
     .attractionAll{
         grid-template-columns: repeat(1, 1fr);
         gap:30px;
-        padding: 0 10px 0 5px;
+        padding: 0 10px 0 0 ;
         min-width: 360px;
         margin: auto;
     }
@@ -491,23 +495,12 @@ footer {
     .info span {
         font-size: 16px;
     }
-    
-    .footer{
-        width: 100%;
-        padding: 0;
-        margin: 10px;
-        height: 40px;
-    }
-    
-    .footer_content{
-        padding-top: 5px;  
-    }
-    
-    .signin{  
-        left:5%;
+
+    .signin, .signup{
+        left:50%;
     }
 
-    .signup{
-        left:5%;
+    footer{
+        min-width: 360px;
     }
 }
