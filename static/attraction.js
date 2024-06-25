@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded",function(){
     
     
     // let url= `http://127.0.0.1:8000/api/attraction/${attractionId}`;
-    let url= `http://52.37.77.90:8000/api/attractions/${attractionId}`;
+    let url= `http://52.37.77.90:8000/api/attraction/${attractionId}`;
     let index=0;
 
     fetch(url)
