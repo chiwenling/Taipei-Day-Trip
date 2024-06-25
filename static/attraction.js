@@ -1,3 +1,4 @@
+// 登入登出跳出視窗
 document.addEventListener("DOMContentLoaded", function() {
     
     let signBtn = document.querySelector(".sign");
@@ -28,130 +29,155 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-// document.addEventListener("DOMContentLoaded", function(){
-//     let apiURL = "http://52.37.77.90:8000/api/attractions";
-    // let container = document.getElementById("attractionAll");
-    // let loading = document.getElementById("getMore");
-    // let nextPage = 0;
-    // let loadingData = false;
-    // let searchInput = document.querySelector(".search_input");
-    // let searchButton = document.querySelector(".search_button");
-    // let mrtName = document.querySelector(".mrt_name");
-    // let scrollLeft = document.querySelector(".scroll_left");
-    // let scrollRight = document.querySelector(".scroll_right");
+// 依照不同選項得不同價格
+document.addEventListener('DOMContentLoaded', function () {
+    let morning = document.querySelector(".morning_option");
+    let afternoon = document.querySelector(".afternoon_option");
+    let costTotal = document.querySelector(".total");
 
-    // loadAttractions(nextPage);
+    morning.addEventListener("change", function () {
+        if (morning.checked) {
+            costTotal.textContent = "新台幣 2000元";
+        }
+    });
 
-    // function loadAttractions(page, keyword){
-    //     if (loadingData || nextPage === null) {
-    //         return; 
-    //     }loadingData = true;
+    afternoon.addEventListener("change", function () {
+        if (afternoon.checked) {
+            costTotal.textContent = "新台幣 2500元"; 
+        }
+    });
+});
 
-    //     let url=apiURL+"?page="+page;
-    //     if (keyword) {
-    //         url=url+"&keyword="+encodeURIComponent(keyword);
-    //     }
+document.addEventListener("DOMContentLoaded",function(){
+    let link = window.location.pathname;
+    let images = document.querySelector(".attraction_pic")
+    let scrollLeft = document.querySelector(".scroll_left")
+    let scrollRight = document.querySelector(".scroll_right")
+    let dots = document.querySelector(".dots")
+    // 取出網址的id
+    let id = link.split("/").pop();
+    let attractionId =1;
+    if (id){
+        attractionId=id;
+    }else{
+        attractionId=1;
+    }
+    
+    
+    // let url= `http://127.0.0.1:8000/api/attraction/${attractionId}`;
+    let url= `http://52.37.77.90:8000/api/attractions/${attractionId}`;
+    let index=0;
 
-    //     fetch(url)
-    //         .then(function(response){
-    //             if (!response.ok) {
-    //                 console.log("error");
-    //             }
-    //             return response.json();
-    //         })
+    fetch(url)
+        .then(function(response){
+            return response.json();
+        })
 
-    //         .then(function(data){
-    //             let attractions = data.data; 
-    //             if (page === 0) {
-    //                 container.innerHTML = "";
-    //             }
-               
-    //             attractions.forEach(function(attraction) {
-    //                 let attractionItem = document.createElement("div");
-    //                 attractionItem.className = "attraction_item";
-    //                 attractionItem.innerHTML = `
-    //                     <div class="image-container">
-    //                         <img src="${attraction.images.length > 0 ? attraction.images[0] : "default.jpg"}" alt="${attraction.name}">
-    //                         <div class="attraction_title">${attraction.name}</div>
-    //                     </div>
-    //                     <div class="info">
-    //                         <span>${attraction.mrt}</span>
-    //                         <span>${attraction.category}</span>
-    //                     </div>
-    //                 `;
-    //                 container.appendChild(attractionItem);
-    //             });
+        .then(function(data){
+            let attraction = data.data;
+            console.log(attraction);
+            // attraction是object
+            let imagesAll = attraction.images;
+            console.log(imagesAll);
+            // imagesAll是array
 
-    //             nextPage = data.nextPage; 
-    //             loadingData = false;
+            document.querySelector(".name").textContent=attraction.name;
+            document.querySelector(".cat").textContent= `${attraction.category} at ${attraction.MRT}`;
+            document.querySelector(".description").textContent=attraction.description;
+            document.querySelector(".address").textContent=attraction.address;
+            document.querySelector(".trans").textContent=attraction.transport;
 
-    //             if (nextPage === null) {
-    //                 loading.style.display = "none"; 
-    //             }
-    //         })
+            
+            let imageLists = images.querySelectorAll('img.pic');
+            imageLists.forEach(function(img){
+                img.remove(); 
+            });
 
-    //         .catch(function(error) {
-    //             console.error("Error fetching data:", error);
-    //             loadingData = false;
-    //         });
-    // };
+            let dotElements = dots.querySelectorAll('.dot');
+                    dotElements.forEach(function(dot) {
+                        dot.remove(); 
+                    });
 
-    // function scroll(){
-    //     let rect = loading.getBoundingClientRect();
-    //     let isAtBottom = rect.top <= window.innerHeight && rect.bottom >= 0;
+            imagesAll.forEach((imageUrl, i) => {
+                let imgElement = document.createElement("img");
+                imgElement.src = imageUrl;
+                imgElement.classList.add("pic");
+                if(i === 0){ 
+                    imgElement.classList.add("active");
+                }
+                images.appendChild(imgElement);
+                
+                let dotElement = document.createElement("div");
+                dotElement.classList.add("dot");
+                if (i === 0) {
+                    dotElement.classList.add("active");
+                }
+                dotElement.addEventListener('click', function() {
+                    showImage(i);
+                    index = i;
+                });
+                dots.appendChild(dotElement);
+            });
 
-    //     if (isAtBottom && nextPage !== null) {
-    //         loadAttractions(nextPage, searchInput.value);
-    //     }
-    // };
+            images.appendChild(scrollLeft);
+            images.appendChild(scrollRight);
 
-    // function fetchMRT() {
-    //     fetch("http://52.37.77.90:8000/api/mrts")
-    //         .then(function(response) {
-    //             if (!response.ok) {
-    //                 console.log("Error");
-    //             }
-    //             return response.json();
-    //         })
-    //         .then(function(data) {
-    //             let stations = data.data; 
-    //             stations.forEach(function(station) {
-    //                 let button = document.createElement("button");
-    //                 button.className = "station_button";
-    //                 button.textContent = station; 
-    //                 button.addEventListener("click", function() {
-    //                     nextPage = 0;
-    //                     loadAttractions(nextPage, station);
-    //                 });
-    //                 mrtName.appendChild(button);
-    //             });
-    //             console.log("finished"); 
-    //         })
-    //         .catch(function(error) {
-    //             console.error("Error fetch", error);
-    //         });
-    // }fetchMRT();
-   
+            function showImage(idx){
+                let imageLists =images.querySelectorAll(".pic");
+                imageLists.forEach((img,i)=> {
+                    img.classList.remove("active");
+                    if (i === idx){
+                        img.classList.add("active");
+                    }
+                });
 
-    // scrollLeft.addEventListener("click", function() {
-    //     mrtName.scrollBy({ left: -100});
-    // });
+                let dotLists = dots.querySelectorAll(".dot");
+                    dotLists.forEach((dot, i) => {
+                    dot.classList.remove("active");
+                    if (i === idx) {
+                        dot.classList.add("active");
+                    }
+                });
+                scrollButton();
+            }
 
-    // scrollRight.addEventListener("click", function() {
-    //     mrtName.scrollBy({ left: 100});
-    // });
+    
+            function scrollButton(){
+                if (index == 0){
+                    scrollLeft.style.pointerEvents="none";
+                    scrollLeft.style.opacity="0.5";
+                } else{
+                    scrollLeft.style.pointerEvents="auto";
+                    scrollLeft.style.opacity="1";
+                }
+                if (customElements === imagesAll.length -1){
+                    scrollRight.style.pointerEvents = 'none';
+                    scrollRight.style.opacity = '0.5';
 
-    // window.addEventListener("scroll", scroll);
+                }else{
+                    scrollRight.style.pointerEvents = 'auto';
+                    scrollRight.style.opacity = '1';
+                }
+            };
 
-    // searchButton.addEventListener("click", function() {
-    //     nextPage = 0; 
-    //     loadAttractions(nextPage, searchInput.value);
-    // });
+            scrollButton();
+            scrollLeft.addEventListener('click', function() {
+                if (index > 0) { 
+                    let nextIndex = index - 1;
+                    showImage(nextIndex); 
+                    index = nextIndex; 
+                }
+            });
 
-    // searchInput.addEventListener("keypress", function(event) {
-    //     if (event.key === "Enter") {
-    //         nextPage = 0; 
-    //         loadAttractions(nextPage, searchInput.value);
-    //     }
-    // });
-// });
+            scrollRight.addEventListener('click', function() {
+                if (index< imagesAll.length -1) { 
+                    let nextIndex = index + 1;
+                    showImage(nextIndex); 
+                    index = nextIndex;
+                }
+            });
+        })
+        .catch(function(error) {
+            console.error("error:", error); 
+        });
+    });

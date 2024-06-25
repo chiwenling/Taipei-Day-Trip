@@ -73,7 +73,9 @@ document.addEventListener("DOMContentLoaded", function(){
                     attractionItem.className = "attraction_item";
                     attractionItem.innerHTML = `
                         <div class="image-container">
-                            <img src="${attraction.images.length > 0 ? attraction.images[0] : "default.jpg"}" alt="${attraction.name}">
+                            <a href="http://52.37.77.90:8000/attraction/${attraction.id}">
+                                <img src="${attraction.images.length > 0 ? attraction.images[0] : "default.jpg"}" alt="${attraction.name}">
+                            </a>
                             <div class="attraction_title">
                                 <div class="attraction_title_font">${attraction.name}</div>   
                             </div>
@@ -160,4 +162,3 @@ document.addEventListener("DOMContentLoaded", function(){
         loadAttractions(nextPage, searchInput.value);
     });
 });
-
