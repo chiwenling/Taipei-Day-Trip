@@ -4,32 +4,119 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Attraction</title>
-  <link rel="stylesheet" href="attraction.css">
-  <!-- <script src="/static/attraction.js"></script> -->
+  <link rel="stylesheet" href="/static/attraction.css">
+  <script src="/static/attraction.js"></script>
 </head>
 <body>
-      <div id="header" class="header">
-        <div class="headerTitle page">
-            <div class="logo">台北一日遊</div>
-            <div class="book">預定行程</div>
-            <div class="sign">登入/註冊</div>
-        </div>
+      <!-- 頂部 -->
+      <div class="header">
+        <div class="headerTitle">
+            <div class="logo"><a href="http://52.37.77.90:8000/">台北一日遊</a></div>
+            <div class="nav">
+                <div class="book">預定行程</div>
+                <div class="sign">登入/註冊</div>
+            </div>
+        </div> 
       </div>
-      <div class="mainPart">
-        <div class="attraction_pic"></div>
-        <div class="attraction_info">
-          <div>平安鐘</div>
-          <div>at哪裡</div>
-          <div class="grayPart">
-            <div>訂購導覽行程</div>
-            <div>以此景點為中心的一日行程，帶您探索城市角落故事</div>
-            <div>選擇日期</div>
-            <div>選擇時間</div>
-            <div>導覽費用</div>
-            <div>開始預約行程</div>
-          </div>
-        </div>
 
+      <!-- 景點圖片和基本資料 -->
+      <div class="introduction">
+          <div class="attraction_pic">
+              <img src="../pics/spot.png" alt="image1" class="pic active">
+              
+              <div class="scroll_button_left">
+                <img class="scroll_left" src="../pics/pic_left.png"></img>
+              </div> 
+              
+              <div class="scroll_button_right">
+                <img class="scroll_right" src="../pics/pic_right.png"></img>
+              </div> 
+              
+              <div class="dots">
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+              </div>
+          </div>
+          
+          <div class="form">
+            <div class="attraction_info">
+                <div class="name">平安鐘</div>
+                <div class="cat">分類 at 捷運站</div>
+                <div class="action">
+                    <div class="Title">訂購導覽行程</div>
+                    <div class="dec">以此景點為中心的一日行程 帶您探索城市角落故事</div>
+                    
+                    <div class="calendar">
+                      <label for="date" class="Title">選擇日期：</label>
+                      <input type="date" id ="date" name="date" class="date">
+                    </div>
+
+                    <div class="time">
+                        <label for="date">選擇時間：</label>
+                        <div class="time_option">
+                            <input type="radio" id="morning" name="time" value="morning" class="morning_option" checked>
+                            <label for="morning">上半天</label>
+                            <input type="radio" id="afternoon" name="time" value="afternoon" class="afternoon_option">
+                            <label for="afternoon">下半天</label>
+                        </div>
+                    </div>
+                    <div class="cost">
+                        <span class="Title"> 導覽費用：</span>
+                        <span class="total"> 新台幣 2000元</span>
+                    </div>
+                    <div class="startBook">
+                        <button class="btn">開始預約行程</button>
+                    </div>
+                  </div>
+              </div>
+          </div>
       </div>
+      
+      <!-- 景點api介紹 -->
+      <div class="info">
+          <div class="description">平安鐘祈求大家的平安 這是為了紀念921地震週年的設計 在喧鬧的廣場上每個小時鳴鐘 保佑平安 祈禱臺灣不會再發生這樣的天災。雙手合十加上108個黃色的琉璃乳丁 隨著緩緩流下的水 在底下的一個小噴泉噴出。</div>
+          <div class="Title_1">景點地址:</div>
+          <div class="address">address</div>
+          <div class="Title_1">交通方式：</div>
+          <div class="trans">搭乘方式</div>
+      </div>
+      <footer>
+        COPYRIGHT © 2021 台北一日遊
+      </footer>
+
+      <!-- 登入框 -->
+      <div id="signin" class="signin">
+        <div class="top_bar"></div>
+        <div class="popup_title">
+            <div class="bluebg"></div>
+            <span class="title">登入會員帳號</span>
+            <span class="close">X</span>
+        </div>      
+        <form class="signin_form">
+            <input type="email" class="email" name="email" placeholder="輸入電子信箱" required>
+            <input type="password" class="password" name="password" placeholder="輸入密碼" required>
+            <button type="submit" class="submit">登入帳戶</button>
+        </form>
+        <div class="alertword">還沒有帳戶？<a href="#" id="signupLink">點此註冊</a></div>
+      </div>
+
+      <!-- 註冊框 -->
+      <div id="signup" class="signup">
+          <div class="top_bar"></div>
+          <div class="popup_title">
+              <div class="bluebg"></div>
+              <span class="title">註冊會員帳號</span>
+              <span class="close">X</span>
+          </div>      
+          <form class="signup_form">
+              <input type="name" class="signup_name" name="signup_name" placeholder="輸入姓名" required>
+              <input type="email" class="email" name="email" placeholder="輸入電子信箱" required>
+              <input type="password" class="password" name="password" placeholder="輸入密碼" required>
+              <button type="submit" class="submit">註冊新帳戶</button>
+          </form>
+          <div class="alertword">已經有帳戶了？<a href="#" id="signinLink">點此登入</a></div>
+      </div>
+      
 </body>
 </html>
