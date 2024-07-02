@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Attraction</title>
   <link rel="stylesheet" href="/static/attraction.css">
-  <script src="/static/attraction.js"></script>
+  <!-- <script src="/static/attraction.js"></script> -->
+  <script src="/static/index.js"></script>
 </head>
 <body>
       <!-- 頂部 -->
@@ -25,11 +26,11 @@
               <img src="../pics/spot.png" alt="image1" class="pic active">
               
               <div class="scroll_button_left">
-                <img class="scroll_left" src="../pics/pic_left.png"></img>
+                <img class="pic_scroll_left" src="../pics/pic_left.png"></img>
               </div> 
               
               <div class="scroll_button_right">
-                <img class="scroll_right" src="../pics/pic_right.png"></img>
+                <img class="pic_scroll_right" src="../pics/pic_right.png"></img>
               </div> 
               
               <div class="dots">
@@ -89,7 +90,6 @@
       <div id="signin" class="signin">
         <div class="top_bar"></div>
         <div class="popup_title">
-            <div class="bluebg"></div>
             <span class="title">登入會員帳號</span>
             <span class="close">X</span>
         </div>      
@@ -97,26 +97,27 @@
             <input type="email" class="email" name="email" placeholder="輸入電子信箱" required>
             <input type="password" class="password" name="password" placeholder="輸入密碼" required>
             <button type="submit" class="submit">登入帳戶</button>
+            <div class="message1"></div>
         </form>
         <div class="alertword">還沒有帳戶？<a href="#" id="signupLink">點此註冊</a></div>
       </div>
 
       <!-- 註冊框 -->
       <div id="signup" class="signup">
-          <div class="top_bar"></div>
-          <div class="popup_title">
-              <div class="bluebg"></div>
-              <span class="title">註冊會員帳號</span>
-              <span class="close">X</span>
-          </div>      
-          <form class="signup_form">
-              <input type="name" class="signup_name" name="signup_name" placeholder="輸入姓名" required>
-              <input type="email" class="email" name="email" placeholder="輸入電子信箱" required>
-              <input type="password" class="password" name="password" placeholder="輸入密碼" required>
-              <button type="submit" class="submit">註冊新帳戶</button>
-          </form>
-          <div class="alertword">已經有帳戶了？<a href="#" id="signinLink">點此登入</a></div>
-      </div>
+        <div class="top_bar"></div>
+        <div class="popup_title">
+            <span class="title">註冊會員帳號</span>
+            <span class="close">X</span>
+        </div>      
+        <form class="signup_form">
+            <input type="text" class="signup_name" name="signup_name" placeholder="輸入姓名" required>
+            <input type="email" class="signup_email" name="signup_email" placeholder="輸入電子信箱" required>
+            <input type="password" class="signup_password" name="signup_password" placeholder="輸入密碼" required>
+            <button type="submit" class="submit">註冊新帳戶</button>
+        </form>
+        <div class="message2"></div>
+        <div class="alertword">已經有帳戶了？<a href="#" id="signinLink">點此登入</a></div>
+      </div>     
       
 </body>
 </html>

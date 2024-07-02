@@ -212,7 +212,7 @@ footer {
     position: fixed;
     z-index:1;
     left:50%;
-    top:30%;
+    top:35%;
     transform: translate(-50%, -50%);
     box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
     border-radius:6px;
@@ -226,7 +226,7 @@ footer {
     position: fixed;
     z-index:1;
     left:50%;
-    top:30%;
+    top:35%;
     transform: translate(-50%, -50%);
     box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
     border-radius:6px;
@@ -251,21 +251,23 @@ footer {
 .close {
     cursor: pointer;
     font-size: 20px;
+    padding-left: 20px;
 }
 
 .title{
     font-size:24px ;
     color: #666666;
     font-weight: 700;
+    margin-left: 80px;
 }
 
 .signin_form, .signup_form{
-    padding: 20px;
+    padding: 20px 20px 10px 20px;
     display: flex;
     flex-direction: column;
 }
 
-.signup_name, .email, .password{
+.signup_name, .signup_email, .signup_password, .email, .password{
     margin-bottom: 10px;
     padding: 10px;
     border: 1px solid #ddd;
@@ -294,6 +296,13 @@ footer {
     text-decoration: none;
 }
 
+.message1, .message2{
+    text-align: center;
+    color:#5a8fa1;
+    font-weight: 500;
+    padding-bottom: 3px;
+ }
+ 
 .attraction_section{
     max-width: 1200px;
     margin: auto;
@@ -333,9 +342,6 @@ footer {
     object-fit: cover;
 }
 
-
-
-
 .attraction_title {
     position: absolute;
     width: 100%;
@@ -368,7 +374,6 @@ footer {
     color: #757575;
     padding: 15px 10px 15px 10px; 
 }
-
 
 
 .getMore{

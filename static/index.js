@@ -1,40 +1,214 @@
 document.addEventListener("DOMContentLoaded", function() {
+   
+    function headers() {
+        let token = localStorage.getItem("token");
+        let headers = { "Content-Type": "application/json"};
+        if (token){ 
+            headers["Authorization"] = `Bearer ${token}`;
+        }
+        return headers;
+    }
+
     
     let signBtn = document.querySelector(".sign");
     let closeBtn = document.querySelectorAll(".close");
     let changeBox = document.getElementById("signupLink");
     let returnBox = document.getElementById("signinLink");
+    let signinForm = document.querySelector(".signin_form");
+    let signupForm = document.querySelector(".signup_form");
 
-
+    
     signBtn.addEventListener("click", function() {
-        signin.style.display = "block";
+        document.querySelector(".signin").style.display = "block";
     });
 
     changeBox.addEventListener("click", function() {
-        signin.style.display = "none";
-        signup.style.display = "block";
+        document.querySelector(".signin").style.display = "none";
+        document.querySelector(".signup").style.display = "block";
     });
 
     returnBox.addEventListener("click", function() {
-        signin.style.display = "block";
-        signup.style.display = "none";
+        document.querySelector(".signin").style.display = "block";
+        document.querySelector(".signup").style.display = "none";
     });
 
     closeBtn.forEach(function(btn) {
         btn.addEventListener("click", function() {
-            signin.style.display = "none";
-            signup.style.display = "none";
+            document.querySelector(".signin").style.display = "none";
+            document.querySelector(".signup").style.display = "none";
+            // clearFormAlerts();
+            clearFormValue();
         });
     });
-});
 
-document.addEventListener("DOMContentLoaded", function(){
-    let apiURL = "http://52.37.77.90:8000/api/attractions";
+    let bookbtn = document.querySelector(".book") 
+    bookbtn.addEventListener("click", async function() {
+        let token = localStorage.getItem("token");
+        if (!token) {
+            alert("你還沒有登入");
+        } else {
+            console.log("看預定行程");
+            try {
+                let bookResponse = await fetch("http://52.37.77.90:8000/api/booking", {
+                    method: "GET",
+                    headers: headers()
+                });
+                if (bookResponse.ok) {
+                    let bookData = await bookResponse.json(); 
+                    console.log(bookData); 
+                } else {
+                    console.log("wrong");
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    });
+
+
+
+
+    function checkSignin() {
+        let signout= document.querySelector(".sign")
+        let token = localStorage.getItem("token");
+        if (token) {
+            document.querySelector(".sign").textContent = "登出";
+            signout.onclick =function(){
+                localStorage.removeItem("token");
+                clearFormValue();
+                clearFormAlerts()
+                checkAuth();
+                document.querySelector(".sign").textContent = "登入/註冊";
+                window.location.reload();
+            }
+        }else{
+            document.querySelector(".sign").textContent = "登入/註冊";
+        }
+    }
+
+    // 清空輸入框
+    function clearFormValue() {
+        document.querySelector(".email").value = "";
+        document.querySelector(".password").value = "";
+        document.querySelector(".signup_name").value = "";
+        document.querySelector(".signup_email").value = "";
+        document.querySelector(".signup_password").value = "";
+    }
+
+    // 清空提醒
+    function clearFormAlerts() {
+        document.querySelector(".message1").textContent = "";
+        document.querySelector(".message2").textContent = "";
+    }
     
-    // let apiURL = "http://127.0.0.1:8000/api/attractions";
+    if (signinForm) {
+        signinForm.addEventListener("submit", async function(event) {
+            event.preventDefault();
+            let email = document.querySelector(".email").value;
+            let password = document.querySelector(".password").value;
+            let signinData = {
+                "email": email,
+                "password": password
+            };
+
+            try {
+                let signinResponse = await fetch("http://52.37.77.90:8000/api/user/auth", {
+                    method: "PUT",
+                    headers: headers(),
+                    body: JSON.stringify(signinData)
+                });
+
+                let signinResult = await signinResponse.json();
+                console.log("signinResult", signinResult);
+
+                if (signinResponse.ok && signinResult.token) {
+                    localStorage.setItem("token", signinResult.token);
+                    console.log(localStorage);
+                    document.querySelector(".sign").textContent = "登出";                    
+                    document.querySelector(".signin").style.display = "none";
+                    window.location.reload();
+                    checkAuth(); 
+                } else {
+                    document.querySelector(".message1").textContent = signinResult.message;
+                }
+            } catch (error) {
+                console.error("錯了", error);
+            }
+        });
+    }
+
+    
+    if (signupForm) {
+        signupForm.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            let name = document.querySelector(".signup_name").value;
+            let email = document.querySelector(".signup_email").value;
+            let password = document.querySelector(".signup_password").value;
+            let signupData = {
+                "name": name,
+                "email": email,
+                "password": password
+            };
+            console.log("front-end",signupData);
+
+            try {
+                let signupResponse = await fetch("http://52.37.77.90:8000/api/user", {
+                    method: "POST",
+                    headers: headers(),
+                    body: JSON.stringify(signupData)
+                });
+                console.log("signupResponse:",signupResponse)
+
+                let signupResult = await signupResponse.json();
+                console.log("signupResult", signupResult);
+                if (signupResponse.ok && signupResult.ok) {
+                    document.querySelector(".message2").textContent = "註冊成功";
+                    clearFormValue();
+                } else {
+                    document.querySelector(".message2").textContent = signupResult.message;
+                }
+            } catch (error) {
+                return {
+                    message: "伺服器內部錯誤"
+                };
+            }
+        }
+    )}
+    
+    async function checkAuth() {
+        let url = "http://52.37.77.90:8000/api/user/auth";
+        let token = localStorage.getItem("token");
+
+        if (!token) {
+            console.log("没有token");
+            return;
+        }
+
+        try {
+            let response = await fetch(url, {
+                method: "GET",
+                headers:headers()
+            });
+
+            if (!response.ok) {
+                let errorData = await response.json();
+                console.error("Error:", errorData);
+            } else {
+                let data = await response.json();
+                console.log("frontend_received:", data);
+            }
+        } catch (error) {
+            console.error("錯了", error);
+        }
+    }
+
+    
+    checkSignin();
+
+    
+    let apiURL = "http://52.37.77.90:8000/api/attractions";
     let container = document.querySelector(".attractionAll");
-    let nextPage = 0;
-    let loadingData = false;
     let searchInput = document.querySelector(".search_input");
     let searchButton = document.querySelector(".search_button");
     let mrtName = document.querySelector(".mrt_name");
@@ -42,123 +216,239 @@ document.addEventListener("DOMContentLoaded", function(){
     let scrollRight = document.querySelector(".scroll_right");
     let loading = document.querySelector(".getMore");
 
-    loadAttractions(nextPage);
+    let nextPage = 0;
+    let loadingData = false;
 
-    function loadAttractions(page, keyword){
-        if (loadingData || nextPage === null) {
-            return; 
-        }loadingData = true;
+    function loadAttractions(page, keyword) {
+        if (loadingData || nextPage === null) return;
+        loadingData = true;
 
-        let url=apiURL+"?page="+page;
-        if (keyword) {
-            url=url+"&keyword="+encodeURIComponent(keyword);
-        }
+        let url = `${apiURL}?page=${page}`;
+        console.log("checkul",url)
+        if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
 
-        fetch(url)
-            .then(function(response){
-                if (!response.ok) {
-                    console.log("error");
-                }
-                return response.json();
-            })
+        fetch(url, {
+            method: "GET",
+            headers: headers()
+        })
+        .then(response => response.ok ? response.json() : Promise.reject("error"))
+        .then(travelData => {
+            let attractions = travelData.data;
+            if (page === 0) container.innerHTML = "";
 
-            .then(function(data){
-                let attractions = data.data; 
-                if (page === 0) {
-                    container.innerHTML = "";
-                }
-               
-                attractions.forEach(function(attraction) {
-                    let attractionItem = document.createElement("div");
-                    attractionItem.className = "attraction_item";
-                    attractionItem.innerHTML = `
-                        <div class="image-container">
-                            <a href="http://52.37.77.90:8000/attraction/${attraction.id}">
-                                <img src="${attraction.images.length > 0 ? attraction.images[0] : "default.jpg"}" alt="${attraction.name}">
-                            </a>
-                            <div class="attraction_title">
-                                <div class="attraction_title_font">${attraction.name}</div>   
-                            </div>
+            attractions.forEach(attraction => {
+                let attractionItem = document.createElement("div");
+                attractionItem.className = "attraction_item";
+                attractionItem.innerHTML = `
+                    <div class="image-container">
+                        <a href="http://52.37.77.90:8000/attraction/${attraction.id}">
+                            <img src="${attraction.images.length > 0 ? attraction.images[0] : "default.jpg"}" alt="${attraction.name}">
+                        </a>
+                        <div class="attraction_title">
+                            <div class="attraction_title_font">${attraction.name}</div>   
                         </div>
-                        <div class="info">
-                            <span>${attraction.mrt}</span>
-                            <span>${attraction.category}</span>
-                        </div>
-                    `;
-                    container.appendChild(attractionItem);
-                });
-
-                nextPage = data.nextPage; 
-                loadingData = false;
-
-                if (nextPage === null) {
-                    loading.style.display = "none"; 
-                }
-            })
-
-            .catch(function(error) {
-                console.error("Error fetching data:", error);
-                loadingData = false;
+                    </div>
+                    <div class="info">
+                        <span>${attraction.mrt}</span>
+                        <span>${attraction.category}</span>
+                    </div>
+                `;
+                container.appendChild(attractionItem);
             });
-    };
 
-    function scroll(){
+            nextPage = travelData.nextPage;
+            loadingData = false;
+            if (nextPage === null) loading.style.display = "none";
+        })
+        .catch(error => {
+            console.error(error);
+            loadingData = false;
+        });
+    }
+
+    function handleScroll() {
         let rect = loading.getBoundingClientRect();
-        let isTop = rect.top <= window.innerHeight;
-        let isBottom = rect.bottom >= 0;
-        let end = isTop && isBottom;
+        let isEnd = rect.top <= window.innerHeight && rect.bottom >= 0;
 
-        if (end && nextPage !== null) {
+        if (isEnd && nextPage !== null) {
             loadAttractions(nextPage, searchInput.value);
         }
-    };
-
-    window.addEventListener("scroll", scroll);
+    }
 
     function fetchMRT() {
-        fetch("http://52.37.77.90:8000/api/mrts")
-        // fetch("http://127.0.0.1:8000/api/mrts")
-            .then(function(response) {
-                if (!response.ok) {
-                    console.log("Error");
-                }
-                return response.json();
-            })
-            .then(function(data) {
-                let stations = data.data; 
-                mrtName.innerHTML = "";
-                stations.forEach(function(station) {
-                    let button = document.createElement("div");
-                    button.className = "station_button";
-                    button.textContent = station; 
-                    button.addEventListener("click", function() {
-                        nextPage = 0;
-                        searchInput.value = station; 
-                        loadAttractions(nextPage, searchInput.value);
-                    });
-                    mrtName.appendChild(button);
+        fetch("http://52.37.77.90:8000/api/mrts", {
+            method: "GET",
+            headers: headers()
+        })
+        .then(response => response.ok ? response.json() : Promise.reject("Error"))
+        .then(mrtData => {
+            let stations = mrtData.data;
+            mrtName.innerHTML = "";
+            stations.forEach(station => {
+                let button = document.createElement("div");
+                button.className = "station_button";
+                button.textContent = station;
+                button.addEventListener("click", () => {
+                    nextPage = 0;
+                    searchInput.value = station;
+                    loadAttractions(nextPage, searchInput.value);
                 });
-                mrtName.scrollLeft = 0;
-                console.log("finished"); 
-            })
-            .catch(function(error) {
-                console.error("Error fetch", error);
+                mrtName.appendChild(button);
             });
+            mrtName.scrollLeft = 0;
+        })
+        .catch(error => {
+            console.error(error);
+        });
     }
-    
-    fetchMRT();
-   
 
-    scrollLeft.addEventListener("click", function() {
-        mrtName.scrollBy({ left: -100});
-    });
-
-    scrollRight.addEventListener("click", function() {
-        mrtName.scrollBy({ left: 100});
-    });
-
-    searchButton.addEventListener("click", function() {
-        nextPage = 0; 
+    scrollLeft.addEventListener("click", () => mrtName.scrollBy({ left: -100 }));
+    scrollRight.addEventListener("click", () => mrtName.scrollBy({ left: 100 }));
+    searchButton.addEventListener("click", () => {
+        nextPage = 0;
         loadAttractions(nextPage, searchInput.value);
     });
+
+    window.addEventListener("scroll", handleScroll);
+
+  
+    loadAttractions(nextPage);
+    fetchMRT();
+    
+});
+
+
+// Attraction 依照不同選項得不同價格
+document.addEventListener("DOMContentLoaded", function () {
+   
+    let morning = document.querySelector(".morning_option");
+    let afternoon = document.querySelector(".afternoon_option");
+    let costTotal = document.querySelector(".total");
+
+    morning.addEventListener("change", function () {
+        if (morning.checked) {
+            costTotal.textContent = "新台幣 2000元";
+        }
+    });
+
+    afternoon.addEventListener("change", function () {
+        if (afternoon.checked) {
+            costTotal.textContent = "新台幣 2500元"; 
+        }
+    });
+
+    let images = document.querySelector(".attraction_pic");
+    let pic_scrollLeft = document.querySelector(".pic_scroll_left");
+    let pic_scrollRight = document.querySelector(".pic_scroll_right");
+    let dots = document.querySelector(".dots");
+    let link = window.location.pathname;
+    let attractionId = link.split("/").pop();    
+    let attractionUrl = `http://52.37.77.90:8000/api/attraction/${attractionId}`;
+    let index = 0;
+
+    fetch(attractionUrl)
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            let attraction = data.data;
+            let imagesAll = attraction.images;
+
+            document.querySelector(".name").textContent = attraction.name;
+            document.querySelector(".cat").textContent = `${attraction.category} at ${attraction.MRT}`;
+            document.querySelector(".description").textContent = attraction.description;
+            document.querySelector(".address").textContent = attraction.address;
+            document.querySelector(".trans").textContent = attraction.transport;
+
+            let imageLists = images.querySelectorAll(".pic");
+            imageLists.forEach(function(img) {
+                img.remove();
+            });
+
+            let dotElements = dots.querySelectorAll(".dot");
+            dotElements.forEach(function(dot) {
+                dot.remove();
+            });
+
+            
+            imagesAll.forEach((imageUrl, i) => {
+                let imgElement = document.createElement("img");
+                imgElement.src = imageUrl;
+                imgElement.classList.add("pic");
+                if (i === 0) { 
+                    imgElement.classList.add("active");
+                }
+                images.appendChild(imgElement);
+
+                let dotElement = document.createElement("div");
+                dotElement.classList.add("dot");
+                if (i === 0) {
+                    dotElement.classList.add("active");
+                }
+                dotElement.addEventListener("click", function() {
+                    showImage(i);
+                    index = i;
+                });
+                dots.appendChild(dotElement);
+            });
+
+        
+            images.appendChild(pic_scrollLeft);
+            images.appendChild(pic_scrollRight);
+            scrollButton();
+
+            function showImage(idx) {
+                let imageLists = images.querySelectorAll(".pic");
+                imageLists.forEach((img, i) => {
+                    img.classList.remove("active");
+                    if (i === idx) {
+                        img.classList.add("active");
+                    }
+                });
+
+                let dotLists = dots.querySelectorAll(".dot");
+                dotLists.forEach((dot, i) => {
+                    dot.classList.remove("active");
+                    if (i === idx) {
+                        dot.classList.add("active");
+                    }
+                });
+            }
+
+            function scrollButton() {
+                if (index == 0) {
+                    pic_scrollLeft.style.pointerEvents = "none";
+                    pic_scrollLeft.style.opacity = "0.5";
+                } else {
+                    pic_scrollLeft.style.pointerEvents = "auto";
+                    pic_scrollLeft.style.opacity = "1";
+                }
+                if (index === imagesAll.length - 1) {
+                    pic_scrollRight.style.pointerEvents = "none";
+                    pic_scrollRight.style.opacity = "0.5";
+                } else {
+                    pic_scrollRight.style.pointerEvents = "auto";
+                    pic_scrollRight.style.opacity = "1";
+                }
+            }
+
+            pic_scrollLeft.addEventListener("click", function() {
+                if (index > 0) {
+                    let nextIndex = index - 1;
+                    showImage(nextIndex);
+                    index = nextIndex;
+                }
+            });
+
+            pic_scrollRight.addEventListener("click", function() {
+                if (index < imagesAll.length - 1) {
+                    let nextIndex = index + 1;
+                    showImage(nextIndex);
+                    index = nextIndex;
+                }
+            });
+        })
+        .catch(function(error) {
+            console.error("Error:", error);
+        });
 });

@@ -1,0 +1,265 @@
+.body{
+    font-family:"Noto Sans TC";
+    width: 100%;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+} 
+
+.header{
+    background-color:white;
+    width: 100vw;
+    height: 54px;
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-bottom: 1px solid #f6f6f6;   
+}
+
+.headerTitle{
+    max-width: 1200px;
+    margin:auto;
+    display: grid;
+    grid-auto-columns:5fr 3fr;
+    grid-auto-flow:column; 
+}
+
+.logo{
+    font-size: 30px;
+    color: #448899;
+    font-weight: 500;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.logo a {
+    text-decoration: none; 
+    color: inherit; 
+}
+
+.nav{
+    display: flex; 
+    justify-content:end;
+    align-items: center; 
+}
+
+
+.book{
+    font-size: 16px;
+    padding-right: 30px;
+    cursor: pointer;
+    color: #666666;
+    text-align: center;
+    font-weight: 500;
+}
+
+.sign{
+    font-size: 16px; 
+    padding-left: 10px;
+    padding-right: 15px;
+    cursor: pointer;
+    color: #666666;
+    font-weight: 500;
+}
+
+footer {
+    background-color: #757575;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    width: 100vw;
+    height: 104px;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.product{
+    max-width: 1200px;
+    justify-content: center;
+    align-items: center;
+    margin: 100px auto;
+}
+
+.greeting{
+    text-align: start;
+    margin:100px 0 30px 0;
+}
+
+.productInfo{
+    max-width: 980px;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    margin-left: 110px;
+}
+
+.pic{
+    width: 250px;
+    height: 200px;
+}
+
+.productIntro{
+    padding-left: 20px;
+    display: flex;
+    flex-direction:column;
+    width: 100%;
+}
+
+
+.delete{
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: 0;
+    top: 20%; 
+    transform: translateY(-50%); 
+}
+
+.c1{
+    max-width: 980px;
+    font-weight: 700;
+    font-size: 19px;    
+    color: #666666;
+    margin:20px 0 20px 110px;
+}
+
+.c2{ 
+    font-size: 16px;
+    font-weight: 700;
+    color: #448899;
+    margin: 20px 0 20px 0px;
+    position: relative;
+}
+
+
+.c3{
+    font-weight: 700;
+    font-size: 16px;    
+    color: #666666; 
+}
+
+.c4{
+    font-weight: 700;
+    font-size: 16px;    
+    color: #666666; 
+    margin:20px 0 20px 110px
+}
+
+.info{
+    color: #666666;
+    font-size: 16px; 
+    font-weight: 400;
+    margin: 5px 0;
+}
+
+.content{
+    margin: 10px 0 20px 110px;
+    color: #666666;
+    font-size: 16px; 
+    font-weight: 400;
+}
+
+.memberInfo, .creditCard{
+    margin:30px 0;
+    border-top: 1px solid #E8E8E8;
+}
+
+.total{
+    text-align: end;
+    color: #666666;
+    font-size: 16px; 
+    font-weight: 700;
+}
+
+.ensure{
+    text-align: end;
+    margin: 20px 0 20px 0;
+}
+
+.btn{
+    background: #448899;
+    width: 173px;
+    height: 36px;
+    top: 225px;
+    left: 20px;
+    border:none;
+    border-radius: 5px;
+    border-color: #448899;
+    color: white;
+    font-size: 19px;
+    font-weight: 400;
+    text-align: center;
+}
+
+
+
+@media screen and (max-width: 600px){
+    .header{
+        width: 100%;
+    }
+
+    .headerTitle {
+        grid-auto-columns: 3fr 3fr;
+        padding: 5px 10px 0px 10px;
+    }
+
+    .logo{
+        padding: 0 0 0 5px;
+    }
+    
+    .book{
+        padding: 0;
+    }
+
+    .sign{
+        padding-right:10px;
+    }
+   
+    .signin, .signup{
+        left:50%;
+    }
+
+    .btn{
+        width:180px
+    }
+
+    .product{
+        max-width: 360px;
+    }
+
+    .c1, .content, .c4{
+        margin-left: 10px;
+    }
+    
+    .productInfo{
+        max-width: 340px;
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+    }
+
+    .pic{
+        width: 340px;
+        height: 200px;
+        object-fit: cover;
+        margin-right: 10px;
+    }
+
+    .productIntro{
+        padding-left: 0px;
+    }
+
+    .delete{
+        transform: translateY(500%);
+    }
+
+    footer{
+        min-width: 360px;
+        bottom: 0;
+    }
+}
