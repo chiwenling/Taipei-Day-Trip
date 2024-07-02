@@ -302,18 +302,16 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+
+    loadAttractions(nextPage);
+    fetchMRT();
     scrollLeft.addEventListener("click", () => mrtName.scrollBy({ left: -100 }));
     scrollRight.addEventListener("click", () => mrtName.scrollBy({ left: 100 }));
     searchButton.addEventListener("click", () => {
         nextPage = 0;
         loadAttractions(nextPage, searchInput.value);
     });
-
     window.addEventListener("scroll", handleScroll);
-
-  
-    loadAttractions(nextPage);
-    fetchMRT();
     
 });
 
