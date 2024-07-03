@@ -1,21 +1,17 @@
 from fastapi import *
 from fastapi.responses import FileResponse
 import mysql.connector
-from fastapi import FastAPI, Request, Form, Query, HTTPException
+from fastapi import FastAPI, Request, Form, Query, HTTPException, Depends, status
 from fastapi.staticfiles import StaticFiles
 import jwt
+from datetime import timedelta, timezone
 import datetime
-from datetime import timezone
 from fastapi.responses import JSONResponse
-from fastapi.security import OAuth2PasswordBearer
-from jwt import PyJWTError
-
-
-
-app=FastAPI()
-SECRET_KEY = "leeminho"
-ALGORITHM = "HS256"
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from typing import Annotated
+from jwt.exceptions import InvalidTokenError
+from passlib.context import CryptContext
+from pydantic import BaseModel
 
 
 travel_db = mysql.connector.connect(
@@ -24,10 +20,32 @@ travel_db = mysql.connector.connect(
 	password="leeminho",
 	database="travel"
 )
+
 print(travel_db)
 cursor=travel_db.cursor(dictionary=True)
 
 
+app=FastAPI()
+SECRET_KEY = "10c7909683f7c4295eb9d63d83cd5ca8f24f4b3d4a51154030ec643a7e8b3663"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_DAYS = 7
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    id: int
+    name: str
+    email: str
+
+class User(BaseModel):
+    id: int
+    name: str
+    email: str
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/pics", StaticFiles(directory="pics"), name="pics")
 
@@ -73,12 +91,11 @@ async def enroll(request:Request):
 		finally:
 			if cursor:
 				cursor.close()
-			# travel_db.close()	
 	 
 
 # 取得會員資料
-def create_jwt(user_data):
-    expiration_time = datetime.datetime.now(tz=timezone.utc) + datetime.timedelta(days=7)
+def create_access_token(user_data):
+    expiration_time = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(days=7)
     payload = {
         "data": {
             "id": user_data["id"],
@@ -88,24 +105,35 @@ def create_jwt(user_data):
         "exp": expiration_time
     }
     token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+    print(token)
     return token
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
-    print(f"Received token: {token}")
+async def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
+        print("前方回來的token",token)
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        print(f"Decoded payload: {payload}")
         user_data = payload.get("data")
+        print(f"Decoded payload: {payload}")
         print("user_date:",user_data)
-        if user_data is None:
-            return {"data":None}
-        return {"data":user_data}
-    except PyJWTError as e:
-        print(f"JWT decode error: {e}")
-        raise HTTPException(status_code=401, detail="Token validation failed")
-    except Exception as e:
-        print(f"Unexpected error: {e}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        if not user_data:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Could not validate credentials",
+                headers={"WWW-Authenticate": "Bearer"}
+            )
+        return user_data
+    except:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=str(),
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+
+@app.get("/api/user/auth")
+async def get_user_info(user_data: dict = Depends(get_current_user)):
+    print("要給前端的資料",user_data)
+    return {"data": user_data}
+
 
 @app.put("/api/user/auth")
 async def signin(request: Request):
@@ -114,6 +142,7 @@ async def signin(request: Request):
         email = data.get("email")
         password = data.get("password")
         cursor = travel_db.cursor(dictionary=True)
+        print("檢查前端回傳的東西")
         print(email)
         print(password)
         cursor.execute("SELECT id, email, password, name FROM member WHERE email=%s AND password=%s", (email, password))
@@ -125,7 +154,7 @@ async def signin(request: Request):
                 "name": member["name"],
                 "email": member["email"]
             }
-            token = create_jwt(member_info)
+            token = create_access_token(member_info)
             return {"token": token}
         else:
             return {
@@ -141,98 +170,6 @@ async def signin(request: Request):
     finally:
         if cursor:
             cursor.close()
-
-@app.get("/api/user/auth")
-async def get_user_info(user_data: dict = Depends(get_current_user)):
-	print("get result",user_data)
-	return {"data": user_data}
-
-
-
-
-
-
-
-
-
-
-
-# @app.get("/api/user/auth")
-# async def memberInfo(request:Request, email: str,Authorize: AuthJWT = Depends()):
-# 	Authorize.jwt_required() 
-# 	cursor=None
-# 	try:
-# 		cursor = travel_db.cursor(dictionary=True)
-# 		cursor.execute("SELECT id, name, email FROM member WHERE email = %s", (email,))
-# 		member = cursor.fetchone()		
-		
-		
-# 		if member:
-# 			print("有找到會員資料")
-# 			Authorize.get_jwt_subject()
-# 			return{
-# 				"data": {
-# 				"id": member["id"],
-# 				"name": member["name"],
-# 				"email": member["email"]
-# 				}
-# 			}
-# 		else:
-# 			print("會員資料")
-# 			return{"data":None}
-		
-# 	except mysql.connector.Error as err:
-# 		print(f"Error: {err}")
-# 		return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
-# 	finally:
-# 		if cursor:
-# 			cursor.close()	
-
-#檢查有沒有資料
-
-# @app.put("/api/user/auth")
-# async def signin(request:Request):
-# 	try: 
-# 		data = await request.json()
-# 		email= data.get("email")
-# 		password = data.get("password")
-# 		cursor = travel_db.cursor(dictionary=True)
-# 		print("檢查前端回傳的東西")
-# 		print(email)
-# 		print(password)
-		
-# 		cursor.execute("SELECT id, email, password FROM member WHERE email=%s AND password=%s",(email,password))
-# 		member = cursor.fetchone()
-# 		print(member)
-
-# 		if 	member:
-# 			memberInfo={
-# 			"id":member["id"],
-# 			"email": member["email"],
-# 			"password": member["password"]
-# 			}
-			
-# 			expiration_time = datetime.datetime.now(tz=timezone.utc) + datetime.timedelta(days=7)
-# 			encoded_jwt = jwt.encode({**memberInfo, "exp": expiration_time}, SECRET_KEY, algorithm="HS256")
-# 			print(encoded_jwt)
-# 			return {"token": encoded_jwt}
-		
-# 		else:
-# 			return{
-# 			"error": True,
-# 			"message": "請先註冊後登入"
-# 			}
-
-# 	except  mysql.connector.Error as err:
-# 			return{
-# 			"error": True,
-# 			"message": "伺服器內部錯誤"
-# 			}
-# 	finally:
-# 		if cursor:
-# 			cursor.close()
-# 		travel_db.close()
-
 
 
 @app.get("/attraction/{id}", include_in_schema=False)
