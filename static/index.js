@@ -1,29 +1,34 @@
-document.addEventListener("DOMContentLoaded", function() {
-    function headers() {
-        let token = localStorage.getItem("token");
-        let headers = { "Content-Type": "application/json"};
-        if (checkSignin()){ 
-            headers = { 
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}` 
-            };
-        }
-        return headers;
-    }
+document.addEventListener("DOMContentLoaded", async () => {
 
-    
+    // 避免一直重複
+    window.AppState = {
+        alreadySignin: false
+    };  
+
+    await checkAuth();  
+    checkSignin(); 
+
     let signBtn = document.querySelector(".sign");
     let closeBtn = document.querySelectorAll(".close");
     let changeBox = document.getElementById("signupLink");
     let returnBox = document.getElementById("signinLink");
     let signinForm = document.querySelector(".signin_form");
     let signupForm = document.querySelector(".signup_form");
-
     
     signBtn.addEventListener("click", function() {
+    if (window.AppState.alreadySignin) {
+        document.querySelector(".signin").style.display = "none"; 
+        localStorage.removeItem("token");
+        window.AppState.alreadySignin = false;
+        clearFormValue();
+        clearFormAlerts();
+        this.textContent = "登入/註冊";
+        window.location.reload();
+    } else {
         document.querySelector(".signin").style.display = "block";
+    }
     });
-
+    
     changeBox.addEventListener("click", function() {
         document.querySelector(".signin").style.display = "none";
         document.querySelector(".signup").style.display = "block";
@@ -42,50 +47,26 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    let bookbtn = document.querySelector(".book") 
-    bookbtn.addEventListener("click", async function() {
-        if (checkSignin()) {
-            console.log("看預定行程");
-            try {
-                let bookResponse = await fetch("http://52.37.77.90:8000/api/booking", {
-                    method: "GET",
-                    headers: headers()
-                });
-                if (bookResponse.ok) {
-                    let bookData = await bookResponse.json(); 
-                    console.log(bookData); 
-                } else {
-                    console.log("wrong");
-                }
-            } catch (error) {
-                console.error(error);
-            }
+    function headers() {
+        let token = localStorage.getItem("token");
+        if (token) {
+            headers["Authorization"] = `Bearer ${token}`;
         } else {
-            alert("你還沒有登入");
+            headers["Authorization"] = undefined;
         }
-    });
+    }
 
+    // 確認是否登入
     async function checkSignin() {
         let signBtn = document.querySelector(".sign");
-    
-        signBtn.addEventListener("click", function() {
-            if (this.textContent === "登出") {
-                localStorage.removeItem("token");
-                clearFormValue();
-                clearFormAlerts();
-                this.textContent = "登入/註冊";
-                window.location.reload();
-            }
-        });
-    
-        let authResult = await checkAuth(); 
-        if (authResult) {
+        if (window.AppState.alreadySignin) {
             signBtn.textContent = "登出";
         } else {
             signBtn.textContent = "登入/註冊";
         }
     }
-
+   
+    
     // 清空輸入框
     function clearFormValue() {
         document.querySelector(".email").value = "";
@@ -128,7 +109,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     document.querySelector(".sign").textContent = "登出";                    
                     document.querySelector(".signin").style.display = "none";
                     window.location.reload();
-                    // checkAuth(); 
                 } else {
                     document.querySelector(".message1").textContent = signinResult.message;
                 }
@@ -176,42 +156,40 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     )}
-
+    // 檢查是否登入
     async function checkAuth() {
         let url = "http://52.37.77.90:8000/api/user/auth";
         let token = localStorage.getItem("token");
-        function headers() {
-            return {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            };
-        }
-
         if (!token) {
+            window.AppState.alreadySignin = false;
             return null;
         }
     
         try {
             let response = await fetch(url, {
                 method: "GET",
-                headers: headers()
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
             });
-
             let data = await response.json();
             if (data && data.data) {
                 console.log("成功登入", data);
+                window.AppState.alreadySignin = true;
                 return data; 
             } else {
-                console.log("還未登入");
+                console.log("還沒有登入");
+                window.AppState.alreadySignin = false;
                 return null; 
             }
         } catch (error) {
             console.error("錯誤", error);
+            window.AppState.alreadySignin = false;
             return null;  
         }
     }
-
- 
+    
     let apiURL = "http://52.37.77.90:8000/api/attractions";
     let container = document.querySelector(".attractionAll");
     let searchInput = document.querySelector(".search_input");
@@ -271,7 +249,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function handleScroll() {
+    function scroll() {
         let rect = loading.getBoundingClientRect();
         let isEnd = rect.top <= window.innerHeight && rect.bottom >= 0;
 
@@ -285,7 +263,14 @@ document.addEventListener("DOMContentLoaded", function() {
             method: "GET",
             headers: headers()
         })
-        .then(response => response.ok ? response.json() : Promise.reject("Error"))
+        .then(function(response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return Promise.reject("Error"); 
+            }
+        })
+        
         .then(mrtData => {
             let stations = mrtData.data;
             mrtName.innerHTML = "";
@@ -307,18 +292,21 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    if (document.querySelector(".getMore")) {   
+        loadAttractions(nextPage);
+        fetchMRT();
+        window.addEventListener("scroll", scroll);
+    };
 
-    loadAttractions(nextPage);
-    fetchMRT();
+
     if(scrollLeft&&scrollRight&&searchButton){
         scrollLeft.addEventListener("click", () => mrtName.scrollBy({ left: -100 }));
         scrollRight.addEventListener("click", () => mrtName.scrollBy({ left: 100 }));
         searchButton.addEventListener("click", () => {
             nextPage = 0;
             loadAttractions(nextPage, searchInput.value);
-    });
-    window.addEventListener("scroll", handleScroll);
-    }
+        });
+    };
 });
 
 

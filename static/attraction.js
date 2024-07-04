@@ -175,3 +175,96 @@ document.addEventListener("DOMContentLoaded",function(){
             console.error("error:", error); 
         });
     });
+
+// 備用js
+// function headers() {
+    //     let token = localStorage.getItem("token");
+    //     let headers = { "Content-Type": "application/json"};
+    //     if (checkSignin()){ 
+    //         headers = { 
+    //             "Content-Type": "application/json",
+    //             "Authorization": `Bearer ${token}` 
+    //         };
+    //     }
+    //     return headers;
+    // }
+
+     // let bookbtn = document.querySelector(".book") 
+    // bookbtn.addEventListener("click", async function() {
+    //     if (checkSignin()) {
+    //         console.log("看預定行程");
+    //         try {
+    //             let bookResponse = await fetch("http://127.0.0.1:8000/api/booking", {
+    //                 method: "GET",
+    //                 headers: headers()
+    //             });
+    //             if (bookResponse.ok) {
+    //                 let bookData = await bookResponse.json(); 
+    //                 console.log(bookData); 
+    //             } else {
+    //                 console.log("wrong");
+    //             }
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+    //     } else {
+    //         alert("你還沒有登入");
+    //     }
+    // });
+
+    // 確認是否登入
+    // async function checkSignin() {
+    //     let signBtn = document.querySelector(".sign");
+    
+    //     signBtn.addEventListener("click", function() {
+    //         if (this.textContent === "登出") {
+    //             localStorage.removeItem("token");
+    //             clearFormValue();
+    //             clearFormAlerts();
+    //             this.textContent = "登入/註冊";
+    //             document.querySelector(".signin").style.display = "none";
+    //             window.location.reload();
+    //         }
+    //     });
+    
+    //     let authResult = await checkAuth(); 
+    //     if (authResult) {
+    //         signBtn.textContent = "登出";
+    //     } else {
+    //         signBtn.textContent = "登入/註冊";
+    //     }
+    // }
+
+    // async function checkAuth() {
+    //     let url = "http://127.0.0.1:8000/api/user/auth";
+    //     let token = localStorage.getItem("token");
+    //     function headers() {
+    //         return {
+    //             "Authorization": `Bearer ${token}`,
+    //             "Content-Type": "application/json"
+    //         };
+    //     }
+
+    //     if (!token) {
+    //         return null;
+    //     }
+    
+    //     try {
+    //         let response = await fetch(url, {
+    //             method: "GET",
+    //             headers: headers()
+    //         });
+
+    //         let data = await response.json();
+    //         if (data && data.data) {
+    //             console.log("成功登入", data);
+    //             return data; 
+    //         } else {
+    //             console.log("還未登入");
+    //             return null; 
+    //         }
+    //     } catch (error) {
+    //         console.error("錯誤", error);
+    //         return null;  
+    //     }
+    // }
