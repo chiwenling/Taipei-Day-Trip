@@ -1,4 +1,4 @@
-<div id="header" class="header">
+<!-- <div id="header" class="header">
     <div class="headerTitle page">
         <div class="logo">台北一日遊</div>
         <div class="book">預定行程</div>
@@ -72,4 +72,637 @@
         <button type="submit" class="submit">註冊新帳戶</button>
     </form>
     <div class="alertword">已經有帳戶了？<a href="#" id="signinLink">點此登入</a></div>
-</div>
+</div> -->
+
+
+<!-- 失敗程式碼 -->
+
+<!-- 
+// let token = localStorage.getItem("token");
+
+// let headers = token ? {
+//     "Authorization": `Bearer ${token}`,
+//     "Content-Type": "application/json"
+// } : {
+//     "Content-Type": "application/json"
+// };
+
+
+
+// document.addEventListener("DOMContentLoaded", function() {
+    
+//     let signBtn = document.querySelector(".sign");
+//     let closeBtn = document.querySelectorAll(".close");
+//     let changeBox = document.getElementById("signupLink");
+//     let returnBox = document.getElementById("signinLink");
+//     let signinForm = document.querySelector(".signin_form");
+//     let signupForm = document.querySelector(".signup_form");
+
+
+//     signBtn.addEventListener("click", function() {
+//         signin.style.display = "block";
+//     });
+
+//     changeBox.addEventListener("click", function() {
+//         signin.style.display = "none";
+//         signup.style.display = "block";
+//     });
+
+//     returnBox.addEventListener("click", function() {
+//         signin.style.display = "block";
+//         signup.style.display = "none";
+//     });
+
+//     closeBtn.forEach(function(btn) {
+//         btn.addEventListener("click", function() {
+//             signin.style.display = "none";
+//             signup.style.display = "none";
+//             clearFormAlerts();
+//         });
+//     });
+
+//     function clearFormAlerts() {
+//         if (signinForm) {
+//             signinForm.reset();
+//         }
+//         if (signupForm) {
+//             signupForm.reset();
+//         }
+//         document.querySelector(".message").textContent = "";
+//         document.querySelector(".message").textContent = "";
+//     }
+
+
+
+// });
+
+// 景點
+// document.addEventListener("DOMContentLoaded", function(){
+//     // let apiURL = "http://52.37.77.90:8000/api/attractions";
+    
+//     let apiURL = "http://127.0.0.1:8000/api/attractions";
+//     let container = document.querySelector(".attractionAll");
+//     let nextPage = 0;
+//     let loadingData = false;
+//     let searchInput = document.querySelector(".search_input");
+//     let searchButton = document.querySelector(".search_button");
+//     let mrtName = document.querySelector(".mrt_name");
+//     let scrollLeft = document.querySelector(".scroll_left");
+//     let scrollRight = document.querySelector(".scroll_right");
+//     let loading = document.querySelector(".getMore");
+
+//     loadAttractions(nextPage);
+
+//     function loadAttractions(page, keyword){
+//         if (loadingData || nextPage === null) {
+//             return; 
+//         }loadingData = true;
+
+//         let url=apiURL+"?page="+page;
+//         if (keyword) {
+//             url=url+"&keyword="+encodeURIComponent(keyword);
+//         }
+
+//         fetch(url,{
+//             method: "GET",
+//             headers: headers
+//         })
+//             .then(function(response){
+//                 if (!response.ok) {
+//                     console.log("error");
+//                 }
+//                 return response.json();
+//             })
+
+//             .then(function(travelData){
+//                 let attractions = travelData.data; 
+//                 if (page === 0) {
+//                     container.innerHTML = "";
+//                 }
+               
+//                 attractions.forEach(function(attraction) {
+//                     let attractionItem = document.createElement("div");
+//                     attractionItem.className = "attraction_item";
+//                     attractionItem.innerHTML = `
+//                         <div class="image-container">
+//                             <a href="http://127.0.0.1:8000/attraction/${attraction.id}">
+//                                 <img src="${attraction.images.length > 0 ? attraction.images[0] : "default.jpg"}" alt="${attraction.name}">
+//                             </a>
+//                             <div class="attraction_title">
+//                                 <div class="attraction_title_font">${attraction.name}</div>   
+//                             </div>
+//                         </div>
+//                         <div class="info">
+//                             <span>${attraction.mrt}</span>
+//                             <span>${attraction.category}</span>
+//                         </div>
+//                     `;
+//                     container.appendChild(attractionItem);
+//                 });
+
+//                 nextPage = travelData.nextPage; 
+//                 loadingData = false;
+
+//                 if (nextPage === null) {
+//                     loading.style.display = "none"; 
+//                 }
+//             })
+
+//             .catch(function(error) {
+//                 console.error("Error fetching data:", error);
+//                 loadingData = false;
+//             });
+//     };
+
+//     function scroll(){
+//         let rect = loading.getBoundingClientRect();
+//         let isTop = rect.top <= window.innerHeight;
+//         let isBottom = rect.bottom >= 0;
+//         let end = isTop && isBottom;
+
+//         if (end && nextPage !== null) {
+//             loadAttractions(nextPage, searchInput.value);
+//         }
+//     };
+
+//     window.addEventListener("scroll", scroll);
+
+//     function fetchMRT() {
+//         // fetch("http://52.37.77.90:8000/api/mrts")
+//         fetch("http://127.0.0.1:8000/api/mrts",{
+//             method: "GET",
+//             headers: headers
+//         })
+//             .then(function(response) {
+//                 if (!response.ok) {
+//                     console.log("Error");
+//                 }
+//                 return response.json();
+//             })
+//             .then(function(mrtData) {
+//                 let stations = mrtData.data; 
+//                 mrtName.innerHTML = "";
+//                 stations.forEach(function(station) {
+//                     let button = document.createElement("div");
+//                     button.className = "station_button";
+//                     button.textContent = station; 
+//                     button.addEventListener("click", function() {
+//                         nextPage = 0;
+//                         searchInput.value = station; 
+//                         loadAttractions(nextPage, searchInput.value);
+//                     });
+//                     mrtName.appendChild(button);
+//                 });
+//                 mrtName.scrollLeft = 0;
+//                 console.log("finished"); 
+//             })
+//             .catch(function(error) {
+//                 console.error("Error fetch", error);
+//             });
+//     }
+    
+//     fetchMRT();
+   
+
+//     scrollLeft.addEventListener("click", function() {
+//         mrtName.scrollBy({ left: -100});
+//     });
+
+//     scrollRight.addEventListener("click", function() {
+//         mrtName.scrollBy({ left: 100});
+//     });
+
+//     searchButton.addEventListener("click", function() {
+//         nextPage = 0; 
+//         loadAttractions(nextPage, searchInput.value);
+//     });
+// });
+
+
+// // 登入
+// document.addEventListener("DOMContentLoaded", function() {
+//     let signinForm = document.querySelector(".signin_form");
+//     signinForm.addEventListener("submit", async function(event) {
+//         event.preventDefault();
+//         let email = document.querySelector(".email").value;
+//         let password = document.querySelector(".password").value;
+        
+//         let signinData={
+//             "email": email, 
+//             "password": password
+//         }
+//         console.log(signinData)
+        
+
+//         try {
+//             let signinResponse = await fetch("http://127.0.0.1:8000/api/user/auth",{
+//                 method: "PUT",
+//                 headers: headers,
+//                 body: JSON.stringify(signinData)
+//             });
+
+//             let signinResult = await signinResponse.json();
+//             console.log("signinResult",signinResult)
+            
+
+//             if (signinResponse.ok && signinResult.token) {
+//                 localStorage.setItem("token", signinResult.token);
+//                 console.log(localStorage);
+//                 document.querySelector(".sign").textContent = "登出";
+//                 document.querySelector(".signin").style.display = "none";
+                
+//             } else {
+//                 document.querySelector(".message").textContent = signinResult.message;
+//             }
+//         } catch (error) {
+//             console.error("錯了", error);
+//         }
+//     });
+
+//     function checkSignin() {
+//         let token = localStorage.getItem("token");
+//         if (token) {
+//             document.querySelector(".sign").textContent = "登出";
+//         }
+//     }
+
+//     checkSignin();
+// });
+
+
+// // 註冊
+// document.addEventListener("DOMContentLoaded", function() {
+//     let signupForm = document.querySelector(".signup_form");
+//     if (signupForm) {
+//         signupForm.addEventListener("submit", async function(event) {
+//             event.preventDefault(); 
+
+        
+//             let name = document.querySelector(".signup_name").value;
+//             let email = document.querySelector(".signup_email").value;
+//             let password = document.querySelector(".signup_password").value;
+//             let data = {
+//                 "name": name,
+//                 "email": email,
+//                 "password": password
+//             };
+            
+//             console.log(data)
+           
+//             let alertWord = await enroll(data);
+//             document.querySelector(".message").textContent = alertWord.message;
+//             if(alertWord.message==="註冊成功"){
+//                 document.querySelector(".signup_name").value = "";
+//                 document.querySelector(".signup_email").value = "";
+//                 document.querySelector(".signup_password").value = "";
+//             }
+            
+           
+//         });
+//     } 
+//     else {
+//         console.log("no data");
+//     }
+   
+//     async function enroll(data) {
+//         try {
+//             let response = await fetch("http://127.0.0.1:8000/api/user", {
+//                 method: "POST",
+//                 headers: headers,
+//                 body: JSON.stringify(data)
+//             });
+
+//             let signupResult = await response.json();
+           
+//             // heckStatus 是從後端傳來
+//             if (signupResult.error) {
+//                 console.log(signupResult.error)
+//                 return {message: signupResult.message};
+
+//             } else {
+//                 return {message: "註冊成功"};
+//             }
+//         } catch (error) {
+//             return {
+//                 message: "伺服器內部錯誤"
+//             };
+//         }
+//     }
+// });
+
+
+
+// todo:這是要檢查按下預約行程的。
+// async function checkUserInfo() {
+//     let token = localStorage.getItem("token");
+//     if (!token) {
+//         alert("No token found, please log in first.");
+//         return;
+//     }
+
+//     let response = await fetch("http://127.0.0.1:8000/api/user/auth", {
+//         method: "GET",
+//         headers: {
+//             "Authorization": `Bearer ${token}`
+//         }
+//     });
+
+//     if (response.ok) {
+//         let data = await response.json();
+//         document.getElementById("username").innerText = data.data.name;
+//         document.getElementById("welcomeMessage").style.display = "block";
+//     } else {
+//         alert("Failed to get user info!");
+//     }
+// }
+
+// document.getElementById("checkUserButton").addEventListener("click", checkUserInfo); -->
+<!-- 
+# 以下不用
+# from fastapi import *
+# from fastapi.responses import FileResponse
+# import mysql.connector
+# from fastapi import FastAPI, Request, Form, Query, HTTPException, Depends, status
+# from fastapi.staticfiles import StaticFiles
+# from datetime import timedelta, timezone,datetime
+# from fastapi.responses import JSONResponse
+# from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+# from typing import Annotated
+# from pydantic import BaseModel
+# from jose import JWTError, jwt
+
+# travel_db = mysql.connector.connect(
+# 	host="localhost",
+# 	user="root",
+# 	password="leeminho",
+# 	database="travel"
+# )
+
+# print(travel_db)
+# cursor=travel_db.cursor(dictionary=True)
+
+
+# app=FastAPI()
+# SECRET_KEY = "10c7909683f7c4295eb9d63d83cd5ca8f24f4b3d4a51154030ec643a7e8b3663"
+# ALGORITHM = "HS256"
+# ACCESS_TOKEN_EXPIRE_DAYS = 7
+
+
+# class Token(BaseModel):
+#     access_token: str
+#     token_type: str
+
+# class TokenData(BaseModel):
+#     id: int
+#     name: str
+#     email: str
+
+# class User(BaseModel):
+#     id: int
+#     name: str
+#     email: str
+
+# class BookingRequest(BaseModel):
+#     attractionId: int
+#     date: datetime
+#     time: str
+#     price: int
+
+
+# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
+# app.mount("/static", StaticFiles(directory="static"), name="static")
+# app.mount("/pics", StaticFiles(directory="pics"), name="pics")
+
+# # Static Pages (Never Modify Code in this Block)
+# @app.get("/", include_in_schema=False)
+# async def index(request: Request):
+# 	return FileResponse("./static/index.html", media_type="text/html")
+
+
+# #註冊會員
+# @app.post("/api/user")
+# async def enroll(request:Request):
+# 		try:
+# 			data = await request.json()
+# 			name=data.get("name")
+# 			email=data.get("email")
+# 			password=data.get("password")
+# 			cursor = travel_db.cursor(dictionary=True)
+# 			print("data",data)
+# 			print("name",name)
+			
+# 			cursor.execute("SELECT COUNT(*) AS COUNT FROM member WHERE email = %s", (email,))
+# 			result = cursor.fetchone()
+# 			print("result",result)
+# 			print("有沒有",result["COUNT"])
+# 			if result["COUNT"] > 0:
+# 				return{
+# 					"error": True,
+# 					"message": "此email已註冊帳號"
+# 				}
+# 			else: 
+# 				cursor.execute("INSERT INTO member (name, email, password) VALUES (%s, %s, %s)",(name, email, password))
+# 				travel_db.commit()
+# 				print("已存入")
+# 				return {"ok": True}
+			
+									
+# 		except mysql.connector.Error as err:
+# 			return{
+# 					"error": True,
+# 					"message": "伺服器內部錯誤"
+# 				}
+# 		finally:
+# 			if cursor:
+# 				cursor.close()
+	 
+
+# # 取得會員資料
+# async def create_access_token(user_data):
+#     expiration_time = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(days=7)
+#     payload = {
+#         "data": {
+#             "id": user_data["id"],
+#             "name": user_data["name"],
+#             "email": user_data["email"]
+#         },
+#         "exp": expiration_time
+#     }
+#     token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+#     print(token)
+#     return token
+
+# async def get_current_user(token: str = Depends(oauth2_scheme)):
+# 	credentials_exception = HTTPException(
+#                 status_code=status.HTTP_401_UNAUTHORIZED,
+#                 detail="Could not validate credentials",
+#                 headers={"WWW-Authenticate": "Bearer"}
+#             )
+# 	print("前端回來的token",token)
+# 	try:
+# 		payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+# 		print(f"Decoded payload: {payload}")
+# 		user_data = payload.get("data")
+# 		print("user_date:",user_data)
+# 		if user_data is None:
+# 			raise credentials_exception
+# 		return user_data
+# 	except JWTError as e:
+# 		print(f"JWT decode error: {e}")
+# 		raise credentials_exception
+
+
+# @app.get("/api/user/auth")
+# async def get_user_info(user_data: User = Depends(get_current_user)):
+#     print("要給前端的資料",user_data)
+#     return {"data": user_data}
+
+
+# @app.put("/api/user/auth")
+# async def signin(request: Request):
+#     try:
+#         data = await request.json()
+#         email = data.get("email")
+#         password = data.get("password")
+#         cursor = travel_db.cursor(dictionary=True)
+#         print("檢查前端回傳的東西")
+#         print(email)
+#         print(password)
+#         cursor.execute("SELECT id, email, password, name FROM member WHERE email=%s AND password=%s", (email, password))
+#         member = cursor.fetchone()
+#         print(member)
+#         if member:
+#             member_info = {
+#                 "id": member["id"],
+#                 "name": member["name"],
+#                 "email": member["email"]
+#             }
+#             token = create_access_token(member_info)
+#             return {"token": token}
+#         else:
+#             return {
+#                 "error": True,
+#                 "message": "登入資料有誤"
+#             }
+
+#     except mysql.connector.Error as err:
+#         return {
+#             "error": True,
+#             "message": "伺服器內部錯誤"
+#         }
+#     finally:
+#         if cursor:
+#             cursor.close()
+
+
+# @app.get("/attraction/{id}", include_in_schema=False)
+# async def attraction(request: Request, id: int):
+# 	return FileResponse("./static/attraction.html", media_type="text/html")
+
+# @app.get("/api/attractions")
+# async def searchAttraction(request: Request,page:int = Query(0), keyword: str = Query("")):
+# 	try:
+# 		cursor = travel_db.cursor(dictionary=True)
+# 		page_size=12
+# 		offset = page * page_size
+# 		print(keyword)
+
+# 		if 	keyword or page:
+# 			cursor.execute("SELECT COUNT(*) AS total FROM attractions WHERE mrt=%s OR name LIKE %s",(keyword,f"%{keyword}%"))
+# 			total_num= cursor.fetchone() 
+# 			print(total_num)
+# 			#因為回傳值是{'total': x}
+# 			total= total_num["total"]		
+# 			cursor.execute("SELECT id, name, category, description, address, transport, mrt, lat, lng, images\
+# 							FROM attractions\
+# 							WHERE MRT = %s OR name LIKE %s\
+# 							LIMIT %s OFFSET %s",(keyword,f"%{keyword}%",page_size,offset))
+# 			attractions=cursor.fetchall()
+			
+	
+# 		else:
+# 			cursor.execute("SELECT id, name, category, description, address, transport, mrt, lat, lng, images\
+# 							FROM attractions\
+# 				  			LIMIT %s OFFSET %s",(page_size,offset))
+# 			attractions=cursor.fetchall()
+
+# 			cursor.execute("SELECT COUNT(*) AS total FROM attractions")
+# 			total= cursor.fetchone()
+# 			total= total["total"]
+
+# 		for attraction in attractions:
+# 			if 'images' in attraction and attraction['images']:
+# 					images_str = attraction['images']
+# 					attraction['images'] = [img.strip() for img in images_str.split(',')]
+
+# 		next_page = page + 1 if (page + 1) * page_size < total else None
+# 		if  page > total//12: 
+# 			return {"data": None}
+# 		else:
+# 			return {
+# 				"nextPage": next_page,
+# 				"data": attractions
+# 		}	
+	    
+# 	except:
+# 		   raise HTTPException(status_code=500, detail={"error": True, "message": "內部有問題"})
+
+# #只會有一筆
+# @app.get("/api/attraction/{attractionId}")
+# async def searchId(request: Request, attractionId:int):
+# 	try:
+# 		cursor = travel_db.cursor(dictionary=True)
+# 		cursor.execute("SELECT * FROM attractions WHERE id=%s",(attractionId,))
+# 		attraction=cursor.fetchone()
+		
+# 		if 'images' in attraction and attraction['images']:
+# 				images_str = attraction['images']
+# 				attraction['images'] = [img.strip() for img in images_str.split(',')]
+# 		if attraction:
+# 			return{
+# 				"data": attraction
+# 			}
+# 		else: 
+# 			raise HTTPException(status_code=400, detail={"error": True, "message": "沒東西"})
+# 	except Exception as err:
+#            raise HTTPException(status_code=500, detail={"error": True, "message": "連結失敗"})
+    
+# @app.get("/api/mrts")
+# async def searchMrt(request: Request):
+# 	try:
+# 		cursor = travel_db.cursor(dictionary=True)
+# 		cursor.execute("SELECT MRT FROM attractions GROUP BY MRT ORDER BY COUNT(*)DESC")
+# 		mrt_data=cursor.fetchall()
+		
+# 		mrt=[]
+# 		for station in mrt_data:
+# 			if station["MRT"] is not None:
+# 				mrt.append(station["MRT"])
+# 		return{"data":mrt}
+		
+# 	except Exception as err:
+#            raise HTTPException(status_code=500, detail={"error": True, "message": "連結失敗"})
+
+# @app.get("/booking", include_in_schema=False)
+# async def booking(request: Request):
+# 	return FileResponse("./static/booking.html", media_type="text/html")
+
+		
+# # @app.get("/api/booking")
+# # async def book(request:Request):
+	
+# # @app.post("/api/booking")
+# # async def add(request:Request, booking_request:BookingRequest, user_data: User = Depends(get_current_user)):
+# # 	try:
+# # 		if(user_data) :
+# # 			return {"ok": True}
+# # 		else:
+# # 			return JSONResponse(status_code=403, content={"error": True, "message": "您還未登入"})
+# # 	except HTTPException as e:
+# # 		return JSONResponse(status_code=400, content={"error": True, "message": "輸入錯誤"})
+# # 	except Exception:
+# # 		return JSONResponse(status_code=500, content={"error": True, "message": "伺服器內部錯誤"})
+
+# @app.get("/thankyou", include_in_schema=False)
+# async def thankyou(request: Request):
+# 	return FileResponse("./static/thankyou.html", media_type="text/html") -->
