@@ -1,15 +1,16 @@
 from fastapi import *
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 import mysql.connector
 from fastapi import FastAPI, Request, Form, Query, HTTPException, Depends, status
 from fastapi.staticfiles import StaticFiles
-import jwt
+import jwt, json
 from datetime import timedelta, timezone
 import datetime
 from fastapi.responses import JSONResponse
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer
 from typing import Annotated
 from pydantic import BaseModel
+
 
 
 travel_db = mysql.connector.connect(
@@ -113,7 +114,8 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         user_data = payload.get("data")
         print(f"Decoded payload: {payload}")
         print("user_date:",user_data)
-        if not user_data:
+        if  not user_data:
+            print("沒有這個人") 
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Could not validate credentials",
@@ -121,16 +123,21 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
             )
         return user_data
     except:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=str(),
-            headers={"WWW-Authenticate": "Bearer"}
-        )
+        return None
+        # raise HTTPException(
+        #     status_code=status.HTTP_401_UNAUTHORIZED,
+        #     detail=str(),
+        #     headers={"WWW-Authenticate": "Bearer"}
+        # )
 
 @app.get("/api/user/auth")
 async def get_user_info(user_data: dict = Depends(get_current_user)):
-    print("要給前端的資料",user_data)
-    return {"data": user_data}
+	if user_data:
+		print("要給前端的資料",user_data)
+		return {"data": user_data}
+	else:
+		print("還沒有登入")
+		return{"data":None}
 
 
 @app.put("/api/user/auth")
@@ -258,10 +265,104 @@ async def searchMrt(request: Request):
 	except Exception as err:
            raise HTTPException(status_code=500, detail={"error": True, "message": "連結失敗"})
 
+#訂購景點這是原版
 @app.get("/booking", include_in_schema=False)
 async def booking(request: Request):
 	return FileResponse("./static/booking.html", media_type="text/html")
+
+@app.get("/api/booking")
+async def bookingData(request:Request,user_data: dict = Depends(get_current_user)):
+	member = user_data["email"]
+	if  user_data:
+		cursor.execute("SELECT * FROM booking WHERE bookingEmail = %s", (member,))
+		result=cursor.fetchone()
+		if result:
+			attractionId=result["attractionId"]
+			cursor.execute("SELECT id, name, address,images FROM attractions WHERE id=%s",(attractionId,))
+			attractionInfo=cursor.fetchone()
+			bookDetail={
+				"attraction":{
+					"id":attractionInfo["id"],
+					"name":attractionInfo["name"],
+					"address":attractionInfo["address"],
+					"image":attractionInfo["images"].split(",")[0]
+				},
+				"date":result["date"],
+				"time":result["time"],
+				"price":result["price"]
+			}
+			if bookDetail:
+				print("資料回傳檢查",bookDetail)
+				return {"data": bookDetail}
+			else:
+				return {"data": None}
+		else:
+			return {"data": None}
+	else:	
+		return {
+			"error": True,
+			"message": "請先進行登入再查看預定行程"
+			}
+
  
+@app.post("/api/booking")
+async def booking(request:Request,user_data: dict = Depends(get_current_user)):
+	member = user_data["email"]
+	print("這是會員帳號",member)
+	data = await request.json()
+	print("這是訂購資料",data) 
+	attractionId=data["attractionId"]
+	date=data["date"]
+	time=data["time"]
+	price=data["price"]
+
+	if 	not data["date"]:
+		return {"error": True,"message": "請先選擇日期"}
+	
+	try:
+		if  user_data: 
+			cursor.execute("SELECT * from booking WHERE bookingEmail=%s",(member,))
+			alreadyBook = cursor.fetchone()
+			print("檢查一下",alreadyBook)
+
+			if  alreadyBook:
+				cursor.execute(
+                    "UPDATE booking SET attractionId = %s, date = %s, time = %s, price = %s WHERE bookingEmail = %s", 
+                    (attractionId, date, time, price, member)
+                )
+				travel_db.commit()
+				print("覆蓋訂單")
+
+				cursor.execute("SELECT * FROM booking WHERE bookingEmail = %s", (member,))
+				updated_record = cursor.fetchone()
+				print("確認新資料存入", updated_record)
+				return {"ok": True}
+			
+			else:
+				cursor.execute("INSERT INTO booking (bookingEmail, attractionId, date, time, price) VALUES(%s, %s, %s, %s, %s)",(member, attractionId, date, time, price))
+				travel_db.commit()
+				print("已存入訂單")
+				return {"ok": True}
+			
+		else:
+			return {"error": True,"message": "未登入系統，拒絕存取"}
+	except: 
+		return {"error": True,"message": "伺服器內部錯誤"}
+
+@app.delete("/api/booking")
+async def deleteBooking(request:Request,user_data: dict = Depends(get_current_user)):
+	member = user_data["email"]
+	if 	user_data:
+		cursor.execute("DELETE FROM booking WHERE bookingEmail = %s", (member,))
+		travel_db.commit()
+		print("已刪除景點資訊")
+		return {"ok": True}
+	else: 
+		return {
+            "error": True,
+            "message": "請先登入再進行刪除"
+        }
+
 @app.get("/thankyou", include_in_schema=False)
 async def thankyou(request: Request):
 	return FileResponse("./static/thankyou.html", media_type="text/html")

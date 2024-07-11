@@ -2,18 +2,28 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 避免一直重複
     window.AppState = {
-        alreadySignin: false
-    };  
+        alreadySignin: false,
+        userData: null
+    }; 
 
     await checkAuth();  
     checkSignin(); 
-
+    let book = document.querySelector(".book");
     let signBtn = document.querySelector(".sign");
     let closeBtn = document.querySelectorAll(".close");
     let changeBox = document.getElementById("signupLink");
     let returnBox = document.getElementById("signinLink");
     let signinForm = document.querySelector(".signin_form");
     let signupForm = document.querySelector(".signup_form");
+    
+    book.addEventListener("click",function(){
+        if(window.AppState.alreadySignin) {
+            document.querySelector(".signin").style.display = "none";
+            window.location.href = "http://52.37.77.90:8000/booking";
+        }else{
+            document.querySelector(".signin").style.display = "block";
+        }
+    });
     
     signBtn.addEventListener("click", function() {
     if (window.AppState.alreadySignin) {
@@ -134,7 +144,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("front-end",signupData);
 
             try {
-                let signupResponse = await fetch("http://52.37.77.90:8000/api/user", {
+                let signupResponse = await fetch(" http://52.37.77.90:8000/api/user", {
                     method: "POST",
                     headers: headers(),
                     body: JSON.stringify(signupData)
@@ -156,13 +166,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
     )}
+
     // 檢查是否登入
     async function checkAuth() {
-        let url = "http://52.37.77.90:8000/api/user/auth";
+        let url = " http://52.37.77.90:8000/api/user/auth";
         let token = localStorage.getItem("token");
         if (!token) {
             window.AppState.alreadySignin = false;
-            return null;
+            // return null;
         }
     
         try {
@@ -173,13 +184,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "Content-Type": "application/json"
                 }
             });
-            let data = await response.json();
-            if (data && data.data) {
-                console.log("成功登入", data);
+            let userData = await response.json();
+            if (userData && userData.data) {
+                console.log("有登入狀態", userData);
                 window.AppState.alreadySignin = true;
-                return data; 
+                window.AppState.userData=userData;
+                return userData; 
             } else {
-                console.log("還沒有登入");
+                console.log("未登入狀態");
                 window.AppState.alreadySignin = false;
                 return null; 
             }
@@ -189,8 +201,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             return null;  
         }
     }
-    
-    let apiURL = "http://52.37.77.90:8000/api/attractions";
+
+    // API景點
+    let apiURL = " http://52.37.77.90:8000/api/attractions";
     let container = document.querySelector(".attractionAll");
     let searchInput = document.querySelector(".search_input");
     let searchButton = document.querySelector(".search_button");
@@ -224,7 +237,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 attractionItem.className = "attraction_item";
                 attractionItem.innerHTML = `
                     <div class="image-container">
-                        <a href="http://52.37.77.90:8000/attraction/${attraction.id}">
+                        <a href=" http://52.37.77.90:8000/attraction/${attraction.id}">
                             <img src="${attraction.images.length > 0 ? attraction.images[0] : "default.jpg"}" alt="${attraction.name}">
                         </a>
                         <div class="attraction_title">
@@ -258,8 +271,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // API mrt
     function fetchMRT() {
-        fetch("http://52.37.77.90:8000/api/mrts", {
+        fetch(" http://52.37.77.90:8000/api/mrts", {
             method: "GET",
             headers: headers()
         })
@@ -292,55 +306,36 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    if (document.querySelector(".getMore")) {   
-        loadAttractions(nextPage);
-        fetchMRT();
-        window.addEventListener("scroll", scroll);
-    };
-
-
-    if(scrollLeft&&scrollRight&&searchButton){
-        scrollLeft.addEventListener("click", () => mrtName.scrollBy({ left: -100 }));
-        scrollRight.addEventListener("click", () => mrtName.scrollBy({ left: 100 }));
-        searchButton.addEventListener("click", () => {
-            nextPage = 0;
-            loadAttractions(nextPage, searchInput.value);
-        });
-    };
-});
-
-
-// Attraction 依照不同選項得不同價格
-document.addEventListener("DOMContentLoaded", function () {
-   
-    let morning = document.querySelector(".morning_option");
-    let afternoon = document.querySelector(".afternoon_option");
-    let costTotal = document.querySelector(".total");
-    let images = document.querySelector(".attraction_pic");
-    let pic_scrollLeft = document.querySelector(".pic_scroll_left");
-    let pic_scrollRight = document.querySelector(".pic_scroll_right");
-    let dots = document.querySelector(".dots");
-    let link = window.location.pathname;
-    let attractionId = link.split("/").pop();    
-    let attractionUrl = `http://52.37.77.90:8000/api/attraction/${attractionId}`;
-    let index = 0;
-
-    if (afternoon) {
-        afternoon.addEventListener("change", function () {
-            if (afternoon.checked) {
-                costTotal.textContent = "新台幣 2500元"; 
-            }
-        });
-    }
-
-    if (morning) {
-        morning.addEventListener("change", function () {
-            if (morning.checked) {
-                costTotal.textContent = "新台幣 2000元";
-            }
-        });
-    }
-    if (attractionId>0){ 
+    //進入各別景點頁 
+    async function attractionPage() {
+        let morning = document.querySelector(".morning_option");
+        let afternoon = document.querySelector(".afternoon_option");
+        let costTotal = document.querySelector(".total");
+        let images = document.querySelector(".attraction_pic");
+        let pic_scrollLeft = document.querySelector(".pic_scroll_left");
+        let pic_scrollRight = document.querySelector(".pic_scroll_right");
+        let dots = document.querySelector(".dots");
+        let attractionId = window.location.pathname.split("/").pop();    
+        let attractionUrl = `http://52.37.77.90:8000/api/attraction/${attractionId}`;
+        let index = 0;
+    
+        if (afternoon) {
+            afternoon.addEventListener("change", function () {
+                if (afternoon.checked) {
+                    costTotal.textContent = "新台幣 2500元"; 
+                }
+            });
+        }
+    
+        if (morning) {
+            morning.addEventListener("change", function () {
+                if (morning.checked) {
+                    costTotal.textContent = "新台幣 2000元";
+                }
+            });
+        }
+    
+        if (attractionId > 0) { 
             fetch(attractionUrl)
                 .then(function(response) {
                     return response.json();
@@ -348,24 +343,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(function(data) {
                     let attraction = data.data;
                     let imagesAll = attraction.images;
-
-                    document.querySelector(".name").textContent = attraction.name;
+    
                     document.querySelector(".cat").textContent = `${attraction.category} at ${attraction.MRT}`;
                     document.querySelector(".description").textContent = attraction.description;
                     document.querySelector(".address").textContent = attraction.address;
                     document.querySelector(".trans").textContent = attraction.transport;
-
+    
                     let imageLists = images.querySelectorAll(".pic");
                     imageLists.forEach(function(img) {
                         img.remove();
                     });
-
+    
                     let dotElements = dots.querySelectorAll(".dot");
                     dotElements.forEach(function(dot) {
                         dot.remove();
                     });
-
-                    
+    
                     imagesAll.forEach((imageUrl, i) => {
                         let imgElement = document.createElement("img");
                         imgElement.src = imageUrl;
@@ -374,7 +367,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             imgElement.classList.add("active");
                         }
                         images.appendChild(imgElement);
-
+    
                         let dotElement = document.createElement("div");
                         dotElement.classList.add("dot");
                         if (i === 0) {
@@ -386,30 +379,29 @@ document.addEventListener("DOMContentLoaded", function () {
                         });
                         dots.appendChild(dotElement);
                     });
-
-                
+    
                     images.appendChild(pic_scrollLeft);
                     images.appendChild(pic_scrollRight);
                     scrollButton();
-
-                    function showImage(idx) {
+    
+                    function showImage(x) {
                         let imageLists = images.querySelectorAll(".pic");
                         imageLists.forEach((img, i) => {
                             img.classList.remove("active");
-                            if (i === idx) {
+                            if (i === x) {
                                 img.classList.add("active");
                             }
                         });
-
+    
                         let dotLists = dots.querySelectorAll(".dot");
                         dotLists.forEach((dot, i) => {
                             dot.classList.remove("active");
-                            if (i === idx) {
+                            if (i === x) {
                                 dot.classList.add("active");
                             }
                         });
                     }
-
+    
                     function scrollButton() {
                         if (index == 0) {
                             pic_scrollLeft.style.pointerEvents = "none";
@@ -426,7 +418,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             pic_scrollRight.style.opacity = "1";
                         }
                     }
-
+    
                     pic_scrollLeft.addEventListener("click", function() {
                         if (index > 0) {
                             let nextIndex = index - 1;
@@ -434,7 +426,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             index = nextIndex;
                         }
                     });
-
+    
                     pic_scrollRight.addEventListener("click", function() {
                         if (index < imagesAll.length - 1) {
                             let nextIndex = index + 1;
@@ -446,4 +438,206 @@ document.addEventListener("DOMContentLoaded", function () {
                 .catch(function(error) {
                     console.error("Error:", error);
                 });
-        }});
+        }
+    }
+    
+    //景點分頁「開始預定行程」訂購
+    async function booking() {
+        let bookBtn = document.querySelector(".btn");
+    
+        if (bookBtn) {
+            bookBtn.addEventListener("click", async function() {
+                let userData = await checkAuth();
+                if (userData) {
+                    await submitBooking(); 
+                } else {
+                    document.querySelector(".signin").style.display = "block";
+                }
+            });
+    
+            async function submitBooking() {
+                let attractionId = window.location.pathname.split('/').pop(); 
+                let period = document.querySelector('input[name="time"]:checked').value;
+                let price = document.querySelector(".total").textContent;
+                let date = document.getElementById("date").value;
+    
+                let bookingData = {
+                    attractionId: attractionId,
+                    date: date,
+                    time: period,
+                    price: price
+                };
+                console.log("bookingData", bookingData);
+
+                try {
+                    let response = await fetch("http://52.37.77.90:8000/api/booking", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: JSON.stringify(bookingData)
+                    });
+    
+                    let data = await response.json(); 
+                    if (response.ok) {
+                        console.log(data)
+                        if (data.message === "請先選擇日期") {
+                            alert("請選擇日期");
+                        } else {
+                            console.log("預定結果:", data);
+                            alert("完成訂購");
+                            window.location.href = "http://52.37.77.90:8000/booking";
+                        }
+                    } else {
+                        console.log("test")
+                    }
+                } catch (error) {
+                    console.error("預定錯誤:", error);
+                }
+            }
+        }
+    }
+    // 訂購頁要抓取資料庫有的資料
+    async function bookingPage(){
+        let token = localStorage.getItem("token");
+        let memberGreeting = document.getElementById("memberGreeting");
+        let userData=window.AppState.userData;
+        let period="";
+        if(window.AppState.alreadySignin) {
+            memberGreeting.textContent = `您好，${userData.data.name}，待預定的行程如下：`;
+            try{
+                let response = await fetch("http://52.37.77.90:8000/api/booking", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+                let bookingDetail = await response.json();
+                let pic = document.querySelector(".pic");
+                let title = document.querySelector(".productTitle");
+                let date = document.querySelector(".date");
+                let time = document.querySelector(".time");
+                let price = document.querySelector(".price");
+                let address = document.querySelector(".address");
+                let total_cost = document.querySelector(".total_cost");
+                let product = document.querySelector(".product")
+
+                if (bookingDetail && bookingDetail.data){
+                    if (bookingDetail.data.time="morning"){
+                        period="早上八點到十二點";
+                    }else{
+                        period="下午一點到五點";
+                    }
+                    console.log("有訂購資料",bookingDetail);
+                    // console.log("訂購頁會員資料",userData);
+                    document.getElementById("memberName").value=userData.data.name;
+                    document.getElementById("memberEmail").value=userData.data.email;
+                    pic.src=bookingDetail.data.attraction.image;
+                    title.textContent = bookingDetail.data.attraction.name;
+                    date.textContent = bookingDetail.data.date;
+                    time.textContent = period;
+                    price.textContent = bookingDetail.data.price;
+                    address.textContent = bookingDetail.data.attraction.address;
+                    total_cost.textContent = bookingDetail.data.price;
+                }else{
+                    product.innerHTML="";
+                    let new_product = document.createElement("div");
+                    let newInfo =document.createElement("div");
+                    let footer = document.querySelector("footer");
+                    newInfo.className="note";
+                    new_product.className = "c1";
+                    new_product.id="memberGreeting";
+                    new_product.textContent = `您好，${userData.data.name}，待預定的行程如下：`;
+                    newInfo.textContent="目前沒有任何待預訂的行程";
+                    product.appendChild(new_product);
+                    product.appendChild(newInfo);
+                    footer.style.height = "500px";
+                    console.log("沒有訂購資料");
+                }
+            }catch (error) {
+                console.error("錯了", error);
+            }
+        }else{
+            window.location.href = "http://52.37.77.90:8000/";
+            console.log("要回到主頁");
+        };
+    };
+
+
+    // 訂購頁得到會員的名字
+    // async function bookingPage(){
+    //     // let userData = await checkAuth();
+    //     let memberGreeting = document.getElementById("memberGreeting");
+    //     let userData=window.AppState.userData;
+        
+        
+    //     if (userData && memberGreeting){
+    //         window.AppState.alreadySignin = true;
+    //         console.log("訂購頁會員資料",userData)
+    //         document.getElementById("memberGreeting").textContent = `您好，${userData.data.name}，待預定的行程如下：`;
+    //         document.getElementById("memberName").value=userData.data.name;
+    //         document.getElementById("memberEmail").value=userData.data.email;
+    //     }
+    //     else{
+    //         window.location.href = "http://52.37.77.90:8000/";
+    //         console.log("要回到主頁");
+    //     }
+    // }
+
+    // 刪除景點的垃圾桶
+    async function cancelBook(){
+        let deleteBtn = document.querySelector(".delete");
+        deleteBtn.addEventListener("click", async function(){
+            try {
+                let response = await fetch("http://52.37.77.90:8000/api/booking", {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                let data = await response.json(); 
+                if (response.ok) {
+                    console.log("已刪除景點")
+                    bookingPage();
+                    window.location.reload()
+                }else{
+                }
+            }catch (error) {
+                    console.error("刪除失敗:", error);
+            }
+        });
+    }
+
+    attractionPage();
+    booking();
+
+    if (document.querySelector(".getMore")) {   
+        loadAttractions(nextPage);
+        fetchMRT();
+        window.addEventListener("scroll", scroll);
+    };
+
+    if(scrollLeft&&scrollRight&&searchButton){
+        scrollLeft.addEventListener("click", () => mrtName.scrollBy({ left: -100 }));
+        scrollRight.addEventListener("click", () => mrtName.scrollBy({ left: 100 }));
+        searchButton.addEventListener("click", () => {
+            nextPage = 0;
+            loadAttractions(nextPage, searchInput.value);
+        });
+    };
+    
+    if(window.location.pathname === "/booking"){
+        await bookingPage();
+    };
+
+    if(document.querySelector(".delete")){
+        cancelBook();
+    }
+
+   
+
+});

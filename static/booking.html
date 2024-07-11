@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Booking</title>
   <link rel="stylesheet" href="/static/booking.css">
-  
+  <script src="/static/index.js"></script>
   <!-- <script src="/static/booking.js"></script> -->
 </head>
+
 <body>
     <!-- 頂部 -->
     <div class="header">
@@ -20,11 +21,12 @@
       </div> 
     </div>
 
+    <!-- 商品訂購資訊 -->
     <div class="product">
-        <div class="c1">您好，Yakko，待預定的行程如下：</div>
+        <div class="c1" id ="memberGreeting"></div>
         <div class="productInfo">
           <div>
-            <img src="/pics/spot.png" alt="景點小圖" class="pic">
+            <img src="" alt="景點小圖" class="pic">
           </div>
 
           <div class="productIntro">
@@ -36,41 +38,43 @@
 
               <div class="info">
                 <span class="c3">日期：</span>
-                <span>2021-04-23</span>
+                <span class="date">2021-04-23</span>
               </div>
 
               <div class="info">
                 <span class="c3">時間：</span>
-                <span>早上9點到下午4點</span>
+                <span class="time">早上9點到下午4點</span>
               </div>
 
               <div class="info"> 
                 <span class="c3">費用：</span>
-                <span>新台幣2000元</span>
+                <span class="price">新台幣2000元</span>
               </div>
 
               <div class="info">
                 <span class="c3">地點：</span>
-                <span>臺北市 大安區忠孝東路4段</span>
+                <span class="address">臺北市 大安區忠孝東路4段</span>
               </div>
           </div>
       </div>
+
+      <!-- 聯絡資訊 -->
       <div class="memberInfo">
           <div class="c1">您的聯絡資訊</div>
 
           <div class="content">
               <label>聯絡姓名：</label>
-              <input type="text" class="memberName">
+              <input type="text" class="memberName" id="memberName">
           </div>
 
           <div class="content">
               <label>聯絡信箱：</label>
-              <input type="email" class="memberEmail">
+              <input type="email" class="memberEmail" id="memberEmail">
           </div>
 
           <div class="content">
               <label>手機號碼：</label>
-              <input type="number" class="memberPhone">
+              <input type="number" class="memberPhone" id="memberPhone">
           </div>
           <div class="c4">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div>
       </div>
@@ -78,7 +82,7 @@
           <div class="c1">信用卡付款資訊</div>
           <div class="content">
               <label>卡片號碼：</label>
-              <input type="text" class="memberName" maxlength="16" placeholder="**** **** **** ****">
+              <input type="text" class="cardNumber" maxlength="16" placeholder="**** **** **** ****">
           </div>
 
           <div class="content">
@@ -91,13 +95,14 @@
               <input type="text" class="memberPhone" maxlength="3" placeholder="CVV">
           </div>
       </div>
+
       <div class="total">
         <span>總價：</span>
-        <span>新台幣 2000元</span>
+        <span class="total_cost">新台幣 2000元</span>
       </div>
 
       <div class="ensure">
-        <button class="btn">確認訂購並付款</button>
+        <button class="paybtn">確認訂購並付款</button>
       </div>
 
     </div>
@@ -105,6 +110,40 @@
     <footer>
       COPYRIGHT © 2021 台北一日遊
     </footer>
+
+    <!-- 登入框 -->
+    <div id="signin" class="signin">
+      <div class="top_bar"></div>
+      <div class="popup_title">
+          <span class="title">登入會員帳號</span>
+          <span class="close">X</span>
+      </div>      
+      <form class="signin_form">
+          <input type="email" class="email" name="email" placeholder="輸入電子信箱" required>
+          <input type="password" class="password" name="password" placeholder="輸入密碼" required>
+          <button type="submit" class="submit">登入帳戶</button>
+          <div class="message1"></div>
+      </form>
+      <div class="alertword">還沒有帳戶？<a href="#" id="signupLink">點此註冊</a></div>
+    </div>
+
+    <!-- 註冊框 -->
+    <div id="signup" class="signup">
+      <div class="top_bar"></div>
+      <div class="popup_title">
+          <span class="title">註冊會員帳號</span>
+          <span class="close">X</span>
+      </div>
+
+      <form class="signup_form">
+          <input type="text" class="signup_name" name="signup_name" placeholder="輸入姓名" required>
+          <input type="email" class="signup_email" name="signup_email" placeholder="輸入電子信箱" required>
+          <input type="password" class="signup_password" name="signup_password" placeholder="輸入密碼" required>
+          <button type="submit" class="submit">註冊新帳戶</button>
+      </form>
+      <div class="message2"></div>
+      <div class="alertword">已經有帳戶了？<a href="#" id="signinLink">點此登入</a></div>
+    </div>     
     
     
 

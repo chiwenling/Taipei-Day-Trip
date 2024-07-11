@@ -1,10 +1,12 @@
-.body{
+body{
     font-family:"Noto Sans TC";
     width: 100%;
     overflow-x: hidden;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    height: 100%;
+    /* 高度檢查 */
 } 
 
 .header{
@@ -82,7 +84,7 @@ footer {
     max-width: 1200px;
     justify-content: center;
     align-items: center;
-    margin: 100px auto;
+    margin: 100px auto 100px auto;
 }
 
 .greeting{
@@ -164,6 +166,7 @@ footer {
     font-weight: 400;
 }
 
+
 .memberInfo, .creditCard{
     margin:30px 0;
     border-top: 1px solid #E8E8E8;
@@ -181,7 +184,7 @@ footer {
     margin: 20px 0 20px 0;
 }
 
-.btn{
+.paybtn{
     background: #448899;
     width: 173px;
     height: 36px;
@@ -196,6 +199,109 @@ footer {
     text-align: center;
 }
 
+
+.signin{
+    display: none; 
+    position: fixed;
+    z-index:1;
+    left:50%;
+    top:35%;
+    transform: translate(-50%, -50%);
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+    border-radius:6px;
+    width: 340px;
+    height: 275px;
+    background-color: white;
+}
+
+.signup{
+    display: none; 
+    position: fixed;
+    z-index:1;
+    left:50%;
+    top:35%;
+    transform: translate(-50%, -50%);
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+    border-radius:6px;
+    width: 340px;
+    height: 332px;
+    background-color: white;
+}
+
+.top_bar{
+    background-color: #5a8fa1;
+    height: 10px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.popup_title{
+    display: flex;
+    justify-content: space-around;
+    padding-top: 10px;
+}
+
+.close {
+    cursor: pointer;
+    font-size: 20px;
+    padding-left: 20px;
+}
+
+.title{
+    font-size:24px ;
+    color: #666666;
+    font-weight: 700;
+    margin-left: 80px;
+}
+
+.signin_form, .signup_form{
+    padding: 20px 20px 10px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.signup_name, .signup_email, .signup_password, .email, .password{
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.submit {
+    padding: 10px;
+    background-color: #5a8fa1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.alertword{
+    text-align: center;
+    font-size: 16px;
+    color: #666666;
+}
+
+.login-footer a {
+    color: #5a8fa1;
+    text-decoration: none;
+}
+
+.message1, .message2{
+    text-align: center;
+    color:#5a8fa1;
+    font-weight: 500;
+    padding-bottom: 3px;
+ }
+ 
+.note{
+    padding-top: 50px;
+    padding-left: 10px;
+    padding: 0px 10px 0px 10px;
+    color: #666666;
+}
 
 
 @media screen and (max-width: 600px){
@@ -224,8 +330,8 @@ footer {
         left:50%;
     }
 
-    .btn{
-        width:180px
+    .paybtn{
+        width:173px
     }
 
     .product{
