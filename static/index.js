@@ -350,7 +350,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .then(function(data) {
                     let attraction = data.data;
                     let imagesAll = attraction.images;
-    
+                    document.querySelector(".name").textContent = attraction.name;
                     document.querySelector(".cat").textContent = `${attraction.category} at ${attraction.MRT}`;
                     document.querySelector(".description").textContent = attraction.description;
                     document.querySelector(".address").textContent = attraction.address;

@@ -127,7 +127,7 @@ footer {
     font-weight: 700;
     font-size: 19px;    
     color: #666666;
-    margin:20px 0 20px 110px;
+    margin:40px 0 20px 110px;
 }
 
 .c2{ 
@@ -160,10 +160,21 @@ footer {
 }
 
 .content{
-    margin: 10px 0 20px 110px;
+    margin: 20px 0 20px 110px;
     color: #666666;
     font-size: 16px; 
     font-weight: 400;
+}
+
+.memberName, .memberEmail, .memberPhone, .cardNumber, .expiretime, .cvv {
+    width: 200px;
+    height: 38px;
+    left: 81px;
+    padding: 0px 0px 0px 10px;
+    border-radius: 5px;
+    border: 1px solid #E8E8E8;
+    font-size: 16px;
+    font-weight: 500;
 }
 
 
