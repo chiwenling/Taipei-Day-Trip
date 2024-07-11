@@ -227,7 +227,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             method: "GET",
             headers: headers()
         })
-        // .then(response => response.ok ? response.json() : Promise.reject("error"))
+        
         .then(response => {
             if (response.ok) {
                 return response.json();
@@ -572,26 +572,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
     };
 
-
-    // 訂購頁得到會員的名字
-    // async function bookingPage(){
-    //     // let userData = await checkAuth();
-    //     let memberGreeting = document.getElementById("memberGreeting");
-    //     let userData=window.AppState.userData;
-        
-        
-    //     if (userData && memberGreeting){
-    //         window.AppState.alreadySignin = true;
-    //         console.log("訂購頁會員資料",userData)
-    //         document.getElementById("memberGreeting").textContent = `您好，${userData.data.name}，待預定的行程如下：`;
-    //         document.getElementById("memberName").value=userData.data.name;
-    //         document.getElementById("memberEmail").value=userData.data.email;
-    //     }
-    //     else{
-    //         window.location.href = "http://127.0.0.1:8000/";
-    //         console.log("要回到主頁");
-    //     }
-    // }
 
     // 刪除景點的垃圾桶
     async function cancelBook(){
