@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     book.addEventListener("click",function(){
         if(window.AppState.alreadySignin) {
             document.querySelector(".signin").style.display = "none";
-            window.location.href = "http://127.0.0.1:8000/booking";
+            window.location.href = "http://52.37.77.90:8000/booking";
         }else{
             document.querySelector(".signin").style.display = "block";
         }
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             };
 
             try {
-                let signinResponse = await fetch("http://127.0.0.1:8000/api/user/auth", {
+                let signinResponse = await fetch("http://52.37.77.90:8000/api/user/auth", {
                     method: "PUT",
                     headers: headers(),
                     body: JSON.stringify(signinData)
@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("front-end",signupData);
 
             try {
-                let signupResponse = await fetch(" http://127.0.0.1:8000/api/user", {
+                let signupResponse = await fetch(" http://52.37.77.90:8000/api/user", {
                     method: "POST",
                     headers: headers(),
                     body: JSON.stringify(signupData)
@@ -169,7 +169,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 檢查是否登入
     async function checkAuth() {
-        let url = " http://127.0.0.1:8000/api/user/auth";
+        let url = " http://52.37.77.90:8000/api/user/auth";
         let token = localStorage.getItem("token");
         if (!token) {
             window.AppState.alreadySignin = false;
@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // API景點
-    let apiURL = " http://127.0.0.1:8000/api/attractions";
+    let apiURL = " http://52.37.77.90:8000/api/attractions";
     let container = document.querySelector(".attractionAll");
     let searchInput = document.querySelector(".search_input");
     let searchButton = document.querySelector(".search_button");
@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 attractionItem.className = "attraction_item";
                 attractionItem.innerHTML = `
                     <div class="image-container">
-                        <a href=" http://127.0.0.1:8000/attraction/${attraction.id}">
+                        <a href=" http://52.37.77.90:8000/attraction/${attraction.id}">
                             <img src="${attraction.images.length > 0 ? attraction.images[0] : "default.jpg"}" alt="${attraction.name}">
                         </a>
                         <div class="attraction_title">
@@ -280,7 +280,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // API mrt
     function fetchMRT() {
-        fetch(" http://127.0.0.1:8000/api/mrts", {
+        fetch(" http://52.37.77.90:8000/api/mrts", {
             method: "GET",
             headers: headers()
         })
@@ -323,7 +323,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let pic_scrollRight = document.querySelector(".pic_scroll_right");
         let dots = document.querySelector(".dots");
         let attractionId = window.location.pathname.split("/").pop();    
-        let attractionUrl = `http://127.0.0.1:8000/api/attraction/${attractionId}`;
+        let attractionUrl = `http://52.37.77.90:8000/api/attraction/${attractionId}`;
         let index = 0;
     
         if (afternoon) {
@@ -477,7 +477,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log("bookingData", bookingData);
 
                 try {
-                    let response = await fetch("http://127.0.0.1:8000/api/booking", {
+                    let response = await fetch("http://52.37.77.90:8000/api/booking", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -494,7 +494,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         } else {
                             console.log("預定結果:", data);
                             alert("完成訂購");
-                            window.location.href = "http://127.0.0.1:8000/booking";
+                            window.location.href = "http://52.37.77.90:8000/booking";
                         }
                     } else {
                         console.log("test")
@@ -514,7 +514,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if(window.AppState.alreadySignin) {
             memberGreeting.textContent = `您好，${userData.data.name}，待預定的行程如下：`;
             try{
-                let response = await fetch("http://127.0.0.1:8000/api/booking", {
+                let response = await fetch("http://52.37.77.90:8000/api/booking", {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${token}`,
@@ -567,7 +567,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.error("錯了", error);
             }
         }else{
-            window.location.href = "http://127.0.0.1:8000/";
+            window.location.href = "http://52.37.77.90:8000/";
             console.log("要回到主頁");
         };
     };
@@ -578,7 +578,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let deleteBtn = document.querySelector(".delete");
         deleteBtn.addEventListener("click", async function(){
             try {
-                let response = await fetch("http://127.0.0.1:8000/api/booking", {
+                let response = await fetch("http://52.37.77.90:8000/api/booking", {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
