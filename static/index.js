@@ -750,6 +750,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 });
 
                 let getBookdata = await response.json();
+                console.log("檢查收到的東西",getBookdata)
                 order_number= getBookdata["data"]["number"];
                 console.log("後端回傳資料",order_number);
                 window.location.href = `/thankyou?number=${order_number}`;
