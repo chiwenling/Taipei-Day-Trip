@@ -5,9 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Booking</title>
   <link rel="stylesheet" href="/static/booking.css">
-  
-  <!-- <script src="/static/booking.js"></script> -->
+  <script src="/static/index.js"></script>
+  <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.14.0"></script>
+  <script>
+    TPDirect.setupSDK(152132, "app_hRKpgF0NK9Uf8oka9aPIApx03dcxpEVVuxizAuwylYEr6vbEPZZot1OUSC84", "sandbox");
+  </script>
 </head>
+
 <body>
     <!-- 頂部 -->
     <div class="header">
@@ -20,91 +24,247 @@
       </div> 
     </div>
 
-    <div class="product">
-        <div class="c1">您好，Yakko，待預定的行程如下：</div>
-        <div class="productInfo">
-          <div>
-            <img src="/pics/spot.png" alt="景點小圖" class="pic">
-          </div>
+    <!-- 整筆訂單資訊 -->
+    <form class="payForm">
+            <!-- 商品資訊 -->
+            <div class="product">
+                <div class="c1" id ="memberGreeting"></div>
+                <div class="productInfo">
+                <div>
+                    <img src="" alt="景點小圖" class="pic">
+                </div>
 
-          <div class="productIntro">
-              <div class="c2">
-                <span>台北一日遊：</span>
-                <span class="productTitle">平安鐘</span>
-                <img src="/pics/trashcan.png" class="delete">
-              </div>
+                <div class="productIntro">
+                    <div class="c2">
+                        <span>台北一日遊：</span>
+                        <span class="productTitle">平安鐘</span>
+                        <img src="/pics/trashcan.png" class="delete">
+                    </div>
 
-              <div class="info">
-                <span class="c3">日期：</span>
-                <span>2021-04-23</span>
-              </div>
+                    <div class="info">
+                        <span class="c3">日期：</span>
+                        <span class="date">2021-04-23</span>
+                    </div>
 
-              <div class="info">
-                <span class="c3">時間：</span>
-                <span>早上9點到下午4點</span>
-              </div>
+                    <div class="info">
+                        <span class="c3">時間：</span>
+                        <span class="time">早上9點到下午4點</span>
+                    </div>
 
-              <div class="info"> 
-                <span class="c3">費用：</span>
-                <span>新台幣2000元</span>
-              </div>
+                    <div class="info"> 
+                        <span class="c3">費用：</span>
+                        <span class="price">新台幣2000元</span>
+                    </div>
 
-              <div class="info">
-                <span class="c3">地點：</span>
-                <span>臺北市 大安區忠孝東路4段</span>
-              </div>
-          </div>
-      </div>
-      <div class="memberInfo">
-          <div class="c1">您的聯絡資訊</div>
+                    <div class="info">
+                        <span class="c3">地點：</span>
+                        <span class="address">臺北市 大安區忠孝東路4段</span>
+                    </div>
+                </div>
+            </div>
 
-          <div class="content">
-              <label>聯絡姓名：</label>
-              <input type="text" class="memberName">
-          </div>
+      
+            <!-- 聯絡資訊 -->
+            <div class="memberInfo">
+                <div class="c1">您的聯絡資訊</div>
 
-          <div class="content">
-              <label>聯絡信箱：</label>
-              <input type="email" class="memberEmail">
-          </div>
+                <div class="content">
+                    <label for="memberName">聯絡姓名：</label>
+                    <input type="text" class="memberName" id="memberName">
+                </div>
 
-          <div class="content">
-              <label>手機號碼：</label>
-              <input type="number" class="memberPhone">
-          </div>
-          <div class="c4">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div>
-      </div>
-      <div class="creditCard">
-          <div class="c1">信用卡付款資訊</div>
-          <div class="content">
-              <label>卡片號碼：</label>
-              <input type="text" class="memberName" maxlength="16" placeholder="**** **** **** ****">
-          </div>
+                <div class="content">
+                    <label for="memberEmail">聯絡信箱：</label>
+                    <input type="email" class="memberEmail" id="memberEmail">
+                </div>
 
-          <div class="content">
-              <label>過期時間：</label>
-              <input type="text" class="memberEmail" placeholder="MM/YY">
-          </div>
+                <div class="content">
+                    <label for="memberPhone">手機號碼：</label>
+                    <input type="tel" class="memberPhone" id="memberPhone" required>
+                </div>
+                <div class="c4">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div>
+            </div>
 
-          <div class="content">
-              <label>驗證密碼：</label>
-              <input type="text" class="memberPhone" maxlength="3" placeholder="CVV">
-          </div>
-      </div>
-      <div class="total">
-        <span>總價：</span>
-        <span>新台幣 2000元</span>
-      </div>
+            <!-- 付款資訊 -->
+            <div class="creditCard">
+                <div class="c1">信用卡付款資訊</div>
+                <div class="content">
+                    <label>卡片號碼：</label>
+                    <div class="tpfield" id="card-number"></div>
+                </div>
+                <div class="content">
+                    <label>過期時間：</label>
+                    <div class="tpfield" id="card-expiration-date"></div>
+                </div>
 
-      <div class="ensure">
-        <button class="btn">確認訂購並付款</button>
-      </div>
+                <div class="content">
+                    <label>驗證密碼：</label>
+                    <div class="tpfield" id="card-ccv"></div> 
+                </div>   
+            </div>
 
-    </div>
+            <div class="total">
+                <span>總價：</span>
+                <span class="total_cost">新台幣 2000元</span>
+            </div>
+
+            <div class="ensure">
+                <button class="paybtn">確認訂購並付款</button>
+            </div>
+            </div>
+  </form>
+
+    <!-- <script>
+      let payBtn =document.querySelector(".paybtn");
+      let fields ={
+                number: {
+                    element:"#card-number",
+                    placeholder: "**** **** **** ****"
+                },
+                expirationDate: {
+                    element: document.getElementById("card-expiration-date"),
+                    placeholder: "MM / YY"
+                },
+                ccv: {
+                    element: "#card-ccv",
+                    placeholder: "ccv"
+                }
+              };
+
+      if (payBtn){
+          TPDirect.card.setup({
+                fields: fields,
+                styles: {
+                    "input": {
+                        "color": "gray",
+                        "font-size":"16px"
+                    },
+                    ":focus": {
+                        // 打字的時候
+                    },
+                    ".valid": {
+                        "color": "green"
+                    },
+                    ".invalid": {
+                        "color": "red"
+                    },
+                    "@media screen and (max-width: 400px)": {
+                        "input": {
+                            "color": "orange"
+                        }
+                    }
+                },
+                isMaskCreditCardNumber: false,
+                maskCreditCardNumberRange: {
+                    beginIndex: 4,
+                }
+            })
+          };
+
+      TPDirect.card.onUpdate(function (update) {
+              if (update.canGetPrime) {
+                  // Enable submit Button to get prime.
+                  // submitButton.removeAttribute("disabled")
+              } else {
+                  // Disable submit Button to get prime.
+                  // submitButton.setAttribute("disabled", true)
+              }
+
+              // cardTypes = ["mastercard", "visa", "jcb", "amex", "unionpay","unknown"]
+              if (update.cardType === "visa") {
+                  // Handle card type visa.
+              }
+
+              // number 錯誤
+              if (update.status.number === 2) {
+                  // setNumberFormGroupToError()
+              } else if (update.status.number === 0) {
+                  // setNumberFormGroupToSuccess()
+              } else {
+                  // setNumberFormGroupToNormal()
+              }
+
+              if (update.status.expiry === 2) {
+                  // setNumberFormGroupToError()
+              } else if (update.status.expiry === 0) {
+                  // setNumberFormGroupToSuccess()
+              } else {
+                  // setNumberFormGroupToNormal()
+              }
+
+              if (update.status.ccv === 2) {
+                  // setNumberFormGroupToError()
+              } else if (update.status.ccv === 0) {
+                  // setNumberFormGroupToSuccess()
+              } else {
+                  // setNumberFormGroupToNormal()
+              }
+          });
+
+          // call TPDirect.card.getPrime when user submit form to get tappay prime
+          // $("form").on("submit", onSubmit)
+
+      document.querySelector(".payForm").addEventListener("submit", function (event) {
+                    event.preventDefault();
+                    onSubmit(event);
+                });
+
+      function onSubmit(event) {
+              event.preventDefault();
+              let tappayStatus = TPDirect.card.getTappayFieldsStatus();
+              if (tappayStatus.canGetPrime === false) {
+                  alert("can not get prime")
+                  return
+              };
+              TPDirect.card.getPrime((result) => {
+                  if (result.status !== 0) {
+                      alert("get prime error " + result.msg)
+                      return
+                  }
+                  alert("get prime 成功，prime: " + result.card.prime)
+              })
+          }
+    </script> -->
+
+    
 
     <footer>
       COPYRIGHT © 2021 台北一日遊
     </footer>
+
+    <!-- 登入框 -->
+    <div id="signin" class="signin">
+      <div class="top_bar"></div>
+      <div class="popup_title">
+          <span class="title">登入會員帳號</span>
+          <span class="close">X</span>
+      </div>      
+      <form class="signin_form">
+          <input type="email" class="email" name="email" placeholder="輸入電子信箱" required>
+          <input type="password" class="password" name="password" placeholder="輸入密碼" required>
+          <button type="submit" class="submit">登入帳戶</button>
+          <div class="message1"></div>
+      </form>
+      <div class="alertword">還沒有帳戶？<a href="#" id="signupLink">點此註冊</a></div>
+    </div>
+
+    <!-- 註冊框 -->
+    <div id="signup" class="signup">
+      <div class="top_bar"></div>
+      <div class="popup_title">
+          <span class="title">註冊會員帳號</span>
+          <span class="close">X</span>
+      </div>
+
+      <form class="signup_form">
+          <input type="text" class="signup_name" name="signup_name" placeholder="輸入姓名" required>
+          <input type="email" class="signup_email" name="signup_email" placeholder="輸入電子信箱" required>
+          <input type="password" class="signup_password" name="signup_password" placeholder="輸入密碼" required>
+          <button type="submit" class="submit">註冊新帳戶</button>
+      </form>
+      <div class="message2"></div>
+      <div class="alertword">已經有帳戶了？<a href="#" id="signinLink">點此登入</a></div>
+    </div>     
     
     
 
