@@ -10,8 +10,8 @@ from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer
 from typing import Annotated
 from pydantic import BaseModel
-
-
+import httpx
+import uuid
 
 travel_db = mysql.connector.connect(
 	host="localhost",
@@ -44,6 +44,7 @@ class User(BaseModel):
     name: str
     email: str
 
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/pics", StaticFiles(directory="pics"), name="pics")
@@ -63,13 +64,13 @@ async def enroll(request:Request):
 			email=data.get("email")
 			password=data.get("password")
 			cursor = travel_db.cursor(dictionary=True)
-			print("data",data)
-			print("name",name)
+			# print("data",data)
+			# print("name",name)
 			
 			cursor.execute("SELECT COUNT(*) AS COUNT FROM member WHERE email = %s", (email,))
 			result = cursor.fetchone()
-			print("result",result)
-			print("有沒有",result["COUNT"])
+			# print("result",result)
+			# print("有沒有",result["COUNT"])
 			if result["COUNT"] > 0:
 				return{
 					"error": True,
@@ -78,7 +79,7 @@ async def enroll(request:Request):
 			else: 
 				cursor.execute("INSERT INTO member (name, email, password) VALUES (%s, %s, %s)",(name, email, password))
 				travel_db.commit()
-				print("已存入")
+				# print("已存入")
 				return {"ok": True}
 			
 									
@@ -104,18 +105,18 @@ def create_access_token(user_data):
         "exp": expiration_time
     }
     token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
-    print(token)
+    # print(token)
     return token
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
-        print("前方回來的token",token)
+        # print("前方回來的token",token)
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_data = payload.get("data")
-        print(f"Decoded payload: {payload}")
-        print("user_date:",user_data)
+        # print(f"Decoded payload: {payload}")
+        # print("user_date:",user_data)
         if  not user_data:
-            print("沒有這個人") 
+            # print("沒有這個人") 
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Could not validate credentials",
@@ -124,19 +125,14 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         return user_data
     except:
         return None
-        # raise HTTPException(
-        #     status_code=status.HTTP_401_UNAUTHORIZED,
-        #     detail=str(),
-        #     headers={"WWW-Authenticate": "Bearer"}
-        # )
 
 @app.get("/api/user/auth")
 async def get_user_info(user_data: dict = Depends(get_current_user)):
-	if user_data:
-		print("要給前端的資料",user_data)
+	if  user_data:
+		# print("要給前端的資料",user_data)
 		return {"data": user_data}
 	else:
-		print("還沒有登入")
+		# print("還沒有登入")
 		return{"data":None}
 
 
@@ -147,12 +143,12 @@ async def signin(request: Request):
         email = data.get("email")
         password = data.get("password")
         cursor = travel_db.cursor(dictionary=True)
-        print("檢查前端回傳的東西")
-        print(email)
-        print(password)
+        # print("檢查前端回傳的東西")
+        # print(email)
+        # print(password)
         cursor.execute("SELECT id, email, password, name FROM member WHERE email=%s AND password=%s", (email, password))
         member = cursor.fetchone()
-        print(member)
+        # print(member)
         if member:
             member_info = {
                 "id": member["id"],
@@ -187,12 +183,12 @@ async def searchAttraction(request: Request,page:int = Query(0), keyword: str = 
 		cursor = travel_db.cursor(dictionary=True)
 		page_size=12
 		offset = page * page_size
-		print(keyword)
+		# print(keyword)
 
 		if 	keyword or page:
 			cursor.execute("SELECT COUNT(*) AS total FROM attractions WHERE mrt=%s OR name LIKE %s",(keyword,f"%{keyword}%"))
 			total_num= cursor.fetchone() 
-			print(total_num)
+			# print(total_num)
 			#因為回傳值是{'total': x}
 			total= total_num["total"]		
 			cursor.execute("SELECT id, name, category, description, address, transport, mrt, lat, lng, images\
@@ -265,7 +261,7 @@ async def searchMrt(request: Request):
 	except Exception as err:
            raise HTTPException(status_code=500, detail={"error": True, "message": "連結失敗"})
 
-#訂購景點這是原版
+
 @app.get("/booking", include_in_schema=False)
 async def booking(request: Request):
 	return FileResponse("./static/booking.html", media_type="text/html")
@@ -292,7 +288,7 @@ async def bookingData(request:Request,user_data: dict = Depends(get_current_user
 				"price":result["price"]
 			}
 			if bookDetail:
-				print("資料回傳檢查",bookDetail)
+				# print("資料回傳檢查",bookDetail)
 				return {"data": bookDetail}
 			else:
 				return {"data": None}
@@ -308,9 +304,9 @@ async def bookingData(request:Request,user_data: dict = Depends(get_current_user
 @app.post("/api/booking")
 async def booking(request:Request,user_data: dict = Depends(get_current_user)):
 	member = user_data["email"]
-	print("這是會員帳號",member)
+	# print("這是會員帳號",member)
 	data = await request.json()
-	print("這是訂購資料",data) 
+	# print("這是訂購資料",data) 
 	attractionId=data["attractionId"]
 	date=data["date"]
 	time=data["time"]
@@ -323,7 +319,7 @@ async def booking(request:Request,user_data: dict = Depends(get_current_user)):
 		if  user_data: 
 			cursor.execute("SELECT * from booking WHERE bookingEmail=%s",(member,))
 			alreadyBook = cursor.fetchone()
-			print("檢查一下",alreadyBook)
+			# print("檢查一下",alreadyBook)
 
 			if  alreadyBook:
 				cursor.execute(
@@ -331,7 +327,7 @@ async def booking(request:Request,user_data: dict = Depends(get_current_user)):
                     (attractionId, date, time, price, member)
                 )
 				travel_db.commit()
-				print("覆蓋訂單")
+				# print("覆蓋訂單")
 
 				cursor.execute("SELECT * FROM booking WHERE bookingEmail = %s", (member,))
 				updated_record = cursor.fetchone()
@@ -341,7 +337,7 @@ async def booking(request:Request,user_data: dict = Depends(get_current_user)):
 			else:
 				cursor.execute("INSERT INTO booking (bookingEmail, attractionId, date, time, price) VALUES(%s, %s, %s, %s, %s)",(member, attractionId, date, time, price))
 				travel_db.commit()
-				print("已存入訂單")
+				# print("已存入訂單")
 				return {"ok": True}
 			
 		else:
@@ -367,3 +363,113 @@ async def deleteBooking(request:Request,user_data: dict = Depends(get_current_us
 async def thankyou(request: Request):
 	return FileResponse("./static/thankyou.html", media_type="text/html")
 
+def generate_order_number():
+    order_number = uuid.uuid4().int
+    return str(order_number)[:14]
+
+partner_key="partner_lS0ZgWzMPntujQuc6EH6XblU5tNe3VL9UyKgko0XVL4Zr8MkPnFLgOcW"
+merchant_id="tppf_LynnCHI_GP_POS_1"
+
+@app.post("/api/orders")
+async def order(request:Request,user_data: dict = Depends(get_current_user)):
+	
+	if 	user_data:
+		orderData = await request.json()
+		orderData_json = json.dumps(orderData) 
+		# print("檢查收到什麼資料",orderData)
+		print("檢查收到什麼資料",orderData_json)
+		# return{"檢查":"ok"}
+		if 	orderData_json:
+			order_number = generate_order_number()
+			cursor.execute("INSERT INTO orderlist (data, order_number, record) VALUES (%s, %s, %s)", (orderData_json, order_number, "UNPAID"))
+			travel_db.commit()
+			print("訂單寫入完成")
+			postData ={
+				"prime": orderData["prime"],
+				"partner_key": partner_key,
+				"merchant_id": merchant_id,
+				"details":"tour",
+				"amount": orderData["order"]["price"],
+				"order_number":order_number,
+				"cardholder": {
+					"phone_number": orderData["order"]["contact"]["phone"],
+					"name":  orderData["order"]["contact"]["name"],
+					"email": orderData["order"]["contact"]["email"],
+					"zip_code": "",
+					"address": "",
+					"national_id": ""
+				},
+				"remember": False
+			}
+			try: 
+				url="https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime"
+				headers={
+					"Content-Type": "application/json",
+					"x-api-key": partner_key
+				}
+
+				async with httpx.AsyncClient() as client:
+					response = await client.post(url, json=postData, headers=headers)
+					response_data = response.json()
+					print("response支付結果", response_data)
+					
+
+				# 付款成功
+				if  response_data["status"] == 0:
+					cursor.execute("UPDATE orderlist SET record = %s WHERE order_number=%s", ("PAID",response_data["order_number"]))
+					print("檢查是否一樣",response_data["order_number"])
+					travel_db.commit()
+					print("成功付款，資料庫寫入ok")
+					return {
+						"data": {
+							"number": response_data["order_number"],
+							"payment": {
+							"status": 0,
+							"message": "付款成功"
+							}
+						}
+					}
+				else:
+					print("付款失敗")
+					return {
+						"error": True,
+						"message": "付款失敗"
+					}
+			except:
+				return{
+						"error": True,
+						"message": "伺服器內部錯誤"
+					}
+		return {
+			"error": True,
+			"message": "未登入系統"
+		}
+
+# 取得訂單資訊	
+@app.get("/api/order/{orderNumber}")
+async def thankyou(request:Request, orderNumber: str, user_data: dict = Depends(get_current_user)):
+	if	user_data:
+		cursor.execute("SELECT data from orderlist WHERE order_number=%s",(orderNumber,))
+		orderRecord= json.loads(cursor.fetchone()["data"])
+
+		print("有找到資料",orderRecord)
+		orderDetail={
+			"data": {
+				"number": orderNumber,
+				"price": orderRecord["order"]["price"],
+				"trip": {
+				"attraction":orderRecord["order"]["trip"]["attraction"],
+				"date": orderRecord["order"]["trip"]["date"],
+				"time": orderRecord["order"]["trip"]["time"]
+				},
+				"contact":orderRecord["order"]["contact"] ,
+				"status": 1
+			}
+		}
+		print("訂單資訊",orderDetail)
+		return orderDetail
+	
+	return{
+			"error": True,
+			"message": "請先登入"
+			}

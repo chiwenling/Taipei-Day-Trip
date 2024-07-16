@@ -75,6 +75,18 @@
     width: 100vw;   
 }
 
+.thankyoupic{
+    background: url("/pics/welcome_pic.png") no-repeat top right;
+    margin-top: 54px;
+    background-size: cover;
+    z-index: -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+    height: 600px;
+    width: 100vw;   
+}
+
 
 .slogan {
     margin-left: 5px;
@@ -82,7 +94,7 @@
     top: 150px;  
 }
 
-.maintitle{
+.maintitle,.result{
     font-size:28px;
     font-weight: 700;
     color: white;
@@ -97,6 +109,12 @@
     margin:10px 0 10px 0;
     text-align: start;
 } 
+
+.yournumber{
+    color: goldenrod;
+    font-size: 20px;
+    font-weight: 500;
+}
 
 .search {
     display: flex;
@@ -205,6 +223,21 @@ footer {
     justify-content: center;
     margin-top: 50px;
 }
+
+#footer-id {
+    background-color: #757575;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    width: 100vw;
+    height: 104px;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0px;
+}
+
 
 
 .signin{
@@ -380,6 +413,8 @@ footer {
     padding-bottom: 100px;
 } 
 
+
+
 @media screen and (max-width: 1200px){
     .headerTitle{
         padding:0 20px 0 20px;
@@ -519,6 +554,9 @@ footer {
     }
 
     footer{
+        min-width: 360px;
+    }
+    .thankforfooter{
         min-width: 360px;
     }
 }

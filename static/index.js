@@ -56,9 +56,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             clearFormValue();
         });
     });
-
+    let token = localStorage.getItem("token");
     function headers() {
-        let token = localStorage.getItem("token");
         if (token) {
             headers["Authorization"] = `Bearer ${token}`;
         } else {
@@ -67,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // 確認是否登入
-    async function checkSignin() {
+    function checkSignin() {
         let signBtn = document.querySelector(".sign");
         if (window.AppState.alreadySignin) {
             signBtn.textContent = "登出";
@@ -169,7 +168,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 檢查是否登入
     async function checkAuth() {
-        let url = " http://52.37.77.90:8000/api/user/auth";
+        let url = "http://52.37.77.90:8000/api/user/auth";
         let token = localStorage.getItem("token");
         if (!token) {
             window.AppState.alreadySignin = false;
@@ -186,7 +185,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
             let userData = await response.json();
             if (userData && userData.data) {
-                console.log("有登入狀態", userData);
+                // console.log("有登入狀態", userData);
                 window.AppState.alreadySignin = true;
                 window.AppState.userData=userData;
                 return userData; 
@@ -467,6 +466,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 let period = document.querySelector('input[name="time"]:checked').value;
                 let price = document.querySelector(".total").textContent;
                 let date = document.getElementById("date").value;
+
     
                 let bookingData = {
                     attractionId: attractionId,
@@ -481,7 +481,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
-                            "Authorization": `Bearer ${localStorage.getItem('token')}`
+                            "Authorization": `Bearer ${token}`
                         },
                         body: JSON.stringify(bookingData)
                     });
@@ -507,7 +507,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     // 訂購頁要抓取資料庫有的資料
     async function bookingPage(){
-        let token = localStorage.getItem("token");
         let memberGreeting = document.getElementById("memberGreeting");
         let userData=window.AppState.userData;
         let period="";
@@ -548,6 +547,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     price.textContent = bookingDetail.data.price;
                     address.textContent = bookingDetail.data.attraction.address;
                     total_cost.textContent = bookingDetail.data.price;
+                    finaldata = bookingDetail;
                 }else{
                     product.innerHTML="";
                     let new_product = document.createElement("div");
@@ -582,7 +582,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem('token')}`
+                        "Authorization": `Bearer ${token}`
                     }
                 });
 
@@ -623,8 +623,199 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if(document.querySelector(".delete")){
         cancelBook();
-    }
-
+    };
    
 
+    // 以下是金流
+    let payBtn =document.querySelector(".paybtn");
+    let fields ={
+                number: {
+                    element:"#card-number",
+                    placeholder: "**** **** **** ****"
+                },
+                expirationDate: {
+                    element: document.getElementById("card-expiration-date"),
+                    placeholder: "MM / YY"
+                },
+                ccv: {
+                    element: "#card-ccv",
+                    placeholder: "ccv"
+                }
+            };
+
+    if (payBtn){
+        TPDirect.card.setup({
+                fields: fields,
+                styles: {
+                    "input": {
+                        "color": "gray",
+                        "font-size":"16px"
+                    },
+                    ".valid": {
+                        "color": "green"
+                    },
+                    ".invalid": {
+                        "color": "red"
+                    },
+                    "@media screen and (max-width: 400px)": {
+                        "input": {
+                            "color": "orange"
+                        }
+                    }
+                },
+                isMaskCreditCardNumber: false,
+            });
+
+        TPDirect.card.onUpdate(function (update) {
+            if (update.canGetPrime) {
+                payBtn.removeAttribute("disabled");
+            } else {
+                payBtn.setAttribute("disabled", true); 
+            };
+
+            if (update.cardType === "visa") {
+            };
+
+            // 信用卡號碼錯誤
+            if (update.status.number === 2) {
+            } else if (update.status.number === 0) {
+            } else { 
+            };
+
+            if (update.status.expiry === 2) {
+            } else if (update.status.expiry === 0) {
+            } else {    
+            };
+
+            if (update.status.ccv === 2) {  
+            } else if (update.status.ccv === 0) {
+            } else {
+            };
+        });
+
+        // 這要再研究一下
+        async function onSubmit() {
+            return new Promise(function (resolve){
+                let tappayStatus = TPDirect.card.getTappayFieldsStatus();
+                if (tappayStatus.canGetPrime === false) {
+                    alert("can not get prime");
+                } else {
+                    TPDirect.card.getPrime((result) => {
+                        if (result.status !== 0) {
+                            alert("get prime error " + result.msg);
+                        } else {
+                            let prime = result.card.prime;
+                            // console.log("Prime:", prime);
+                            resolve(prime);
+                        }
+                    });
+                }
+            });
+        };
+
+        //  把後端回傳的訂購資訊還有prime拿出來
+        async function getproductInfo(finaldata,prime){ 
+            console.log("有東西");
+            let price = finaldata.data.price.match(/\d+/)[0];
+            let name = document.querySelector(".memberName").value;
+            let email= document.querySelector(".memberEmail").value;
+            let phone = document.querySelector(".memberPhone").value;
+            orderData={
+                "prime": prime,
+                "order": {
+                  "price": price,
+                  "trip": {
+                    "attraction":finaldata.data.attraction,
+                    "date": finaldata.data.date,
+                    "time": finaldata.data.time
+                  },
+                  "contact": {
+                    "name": name,
+                    "email": email,
+                    "phone": phone
+                  }
+                }
+            };
+            console.log("要給後端的",orderData);
+
+            // 建立新訂單
+            try {
+                let response = await fetch("http://52.37.77.90:8000/api/orders", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                let getBookdata = await response.json();
+                order_number= getBookdata["data"]["number"];
+                console.log("後端回傳資料",order_number);
+                window.location.href = `/thankyou?number=${order_number}`;
+            }catch (error) {
+                console.error("錯了", error);
+            }
+        }; 
+        
+        document.querySelector(".payForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); 
+            let prime = await onSubmit();
+            alert("訂購完成");
+            await getproductInfo(finaldata, prime);
+            console.log("最後一步ok了"); 
+        });
+        
+    };
+
+    async function getOrderDetail() {
+        let url = new URLSearchParams(window.location.search);
+        let orderNumber = url.get("number");
+
+        if (window.AppState.alreadySignin && orderNumber) {
+            try {
+                let response = await fetch(`http://52.37.77.90:8000/api/order/${orderNumber}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+                let result = await response.json();
+                console.log("訂單資訊:", result);
+                document.querySelector(".result").textContent = ` ${result["data"]["contact"]["name"]}，您已完成訂單！`;
+                document.querySelector(".yournumber").textContent = `你的訂單編號是 ${orderNumber}`;
+            } catch (error) {
+                console.log("有錯", error);
+            }
+        } else {
+            window.location.href = "http://52.37.77.90:8000/";
+        }
+    };
+
+    // 訂單完成的話，刪除預定清單
+    async function clear() {
+        try {
+            let response = await fetch("http://52.37.77.90:8000/api/booking", {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+    
+            if (response.ok) {
+                console.log("已刪除");
+            } 
+        } catch (error) {
+            console.log("有問題", error);
+        }
+    }
+
+    let result =document.querySelector(".result");
+    if(result){
+        await getOrderDetail();
+        await clear();
+    };
 });
+

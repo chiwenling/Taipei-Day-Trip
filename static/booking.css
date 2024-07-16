@@ -75,7 +75,8 @@ footer {
     height: 104px;
     bottom: 0;
     display: flex;
-    align-items: center;
+    align-items: start;
+    padding-top: 50px;
     justify-content: center;
     margin-top: 50px;
 }
@@ -164,9 +165,12 @@ footer {
     color: #666666;
     font-size: 16px; 
     font-weight: 400;
+    display: flex;
+    align-items: center;
+
 }
 
-.memberName, .memberEmail, .memberPhone, .cardNumber, .expiretime, .cvv {
+.memberName, .memberEmail, .memberPhone {
     width: 200px;
     height: 38px;
     left: 81px;
@@ -177,10 +181,32 @@ footer {
     font-weight: 500;
 }
 
+.memberName:focus, .memberEmail:focus, .memberPhone:focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+}
 
 .memberInfo, .creditCard{
     margin:30px 0;
     border-top: 1px solid #E8E8E8;
+}
+
+.tpfield {
+    height: 38px;
+    width: 200px;
+    border: 1px solid #E8E8E8;
+    border-radius: 5px;
+    margin: 5px 0;
+    padding-left: 5px;
+}
+
+.tappay-field-focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
 }
 
 .total{
@@ -188,11 +214,16 @@ footer {
     color: #666666;
     font-size: 16px; 
     font-weight: 700;
+    max-width: 980px;
+    margin: 20px 10px 20px 110px;
 }
 
 .ensure{
     text-align: end;
-    margin: 20px 0 20px 0;
+    margin: 20px 10px 20px 110px;
+    max-width: 980px;
+    display: flex;
+    justify-content: end;
 }
 
 .paybtn{
@@ -373,8 +404,14 @@ footer {
         transform: translateY(500%);
     }
 
+    .note{
+        padding-left: 0px;
+    }
+
     footer{
         min-width: 360px;
         bottom: 0;
+        align-items: start;
+        padding-top: 20px;
     }
 }
