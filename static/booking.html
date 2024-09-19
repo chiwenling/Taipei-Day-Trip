@@ -16,7 +16,7 @@
     <!-- 頂部 -->
     <div class="header">
       <div class="headerTitle">
-          <div class="logo"><a href="http://52.37.77.90:8000/">台北一日遊</a></div>
+          <div class="logo"><a href="http://52.12.29.58:8000/">台北一日遊</a></div>
           <div class="nav">
               <div class="book">預定行程</div>
               <div class="sign">登入/註冊</div>
@@ -114,120 +114,6 @@
             </div>
   </form>
 
-    <!-- <script>
-      let payBtn =document.querySelector(".paybtn");
-      let fields ={
-                number: {
-                    element:"#card-number",
-                    placeholder: "**** **** **** ****"
-                },
-                expirationDate: {
-                    element: document.getElementById("card-expiration-date"),
-                    placeholder: "MM / YY"
-                },
-                ccv: {
-                    element: "#card-ccv",
-                    placeholder: "ccv"
-                }
-              };
-
-      if (payBtn){
-          TPDirect.card.setup({
-                fields: fields,
-                styles: {
-                    "input": {
-                        "color": "gray",
-                        "font-size":"16px"
-                    },
-                    ":focus": {
-                        // 打字的時候
-                    },
-                    ".valid": {
-                        "color": "green"
-                    },
-                    ".invalid": {
-                        "color": "red"
-                    },
-                    "@media screen and (max-width: 400px)": {
-                        "input": {
-                            "color": "orange"
-                        }
-                    }
-                },
-                isMaskCreditCardNumber: false,
-                maskCreditCardNumberRange: {
-                    beginIndex: 4,
-                }
-            })
-          };
-
-      TPDirect.card.onUpdate(function (update) {
-              if (update.canGetPrime) {
-                  // Enable submit Button to get prime.
-                  // submitButton.removeAttribute("disabled")
-              } else {
-                  // Disable submit Button to get prime.
-                  // submitButton.setAttribute("disabled", true)
-              }
-
-              // cardTypes = ["mastercard", "visa", "jcb", "amex", "unionpay","unknown"]
-              if (update.cardType === "visa") {
-                  // Handle card type visa.
-              }
-
-              // number 錯誤
-              if (update.status.number === 2) {
-                  // setNumberFormGroupToError()
-              } else if (update.status.number === 0) {
-                  // setNumberFormGroupToSuccess()
-              } else {
-                  // setNumberFormGroupToNormal()
-              }
-
-              if (update.status.expiry === 2) {
-                  // setNumberFormGroupToError()
-              } else if (update.status.expiry === 0) {
-                  // setNumberFormGroupToSuccess()
-              } else {
-                  // setNumberFormGroupToNormal()
-              }
-
-              if (update.status.ccv === 2) {
-                  // setNumberFormGroupToError()
-              } else if (update.status.ccv === 0) {
-                  // setNumberFormGroupToSuccess()
-              } else {
-                  // setNumberFormGroupToNormal()
-              }
-          });
-
-          // call TPDirect.card.getPrime when user submit form to get tappay prime
-          // $("form").on("submit", onSubmit)
-
-      document.querySelector(".payForm").addEventListener("submit", function (event) {
-                    event.preventDefault();
-                    onSubmit(event);
-                });
-
-      function onSubmit(event) {
-              event.preventDefault();
-              let tappayStatus = TPDirect.card.getTappayFieldsStatus();
-              if (tappayStatus.canGetPrime === false) {
-                  alert("can not get prime")
-                  return
-              };
-              TPDirect.card.getPrime((result) => {
-                  if (result.status !== 0) {
-                      alert("get prime error " + result.msg)
-                      return
-                  }
-                  alert("get prime 成功，prime: " + result.card.prime)
-              })
-          }
-    </script> -->
-
-    
-
     <footer>
       COPYRIGHT © 2021 台北一日遊
     </footer>
@@ -265,10 +151,5 @@
       <div class="message2"></div>
       <div class="alertword">已經有帳戶了？<a href="#" id="signinLink">點此登入</a></div>
     </div>     
-    
-    
-
-
-
 </body>
 </html>
